@@ -538,7 +538,7 @@ function saveStatus(id) {
 function openPaymentModal(id) {
   var c = clients.find(function (x) { return x.id === id; });
   if (!c) return;
-  var quickAmounts = [599, 999, 4000, 1499, 2499, 4999, 9999];
+  var quickAmounts = [499, 999, 4000, 1499, 2499, 4999, 9999];
   var uniqueAmounts = quickAmounts.filter(function (v, i, a) { return a.indexOf(v) === i; });
   var chips = uniqueAmounts.map(function (a) {
     return '<button type="button" class="rowbtn" onclick="document.getElementById(\'f_amount\').value=' + a + '">' + fmtMoney(a) + "</button>";
