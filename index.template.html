@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1c1f23">
+<title>GrowMyPin Client Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f3f4f0;
+  --card: #ffffff;
+  --card-2: #f8f9f6;
+  --ink: #1c1f23;
+  --ink-2: #4b5058;
+  --muted: #8a8f97;
+  --line: rgba(28,31,35,0.09);
+  --line-2: rgba(28,31,35,0.16);
+  --brand: #19a463;
+  --brand-ink: #0d6e40;
+  --brand-soft: #e3f5ea;
+  --charcoal: #1c1f23;
+  --charcoal-2: #2a2e34;
+  --good: #19a463;
+  --good-soft: #e3f5ea;
+  --warn: #c77a0a;
+  --warn-soft: #fdf1dc;
+  --bad: #d64545;
+  --bad-soft: #fce8e8;
+  --info: #3b6fd8;
+  --info-soft: #e7eefc;
+  --neutral-soft: #eef0ec;
+  --shadow: 0 1px 2px rgba(20,22,26,0.04), 0 4px 16px rgba(20,22,26,0.05);
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121416;
+    --card: #1b1e22;
+    --card-2: #22262b;
+    --ink: #eef0f2;
+    --ink-2: #b9bec6;
+    --muted: #7d838c;
+    --line: rgba(255,255,255,0.08);
+    --line-2: rgba(255,255,255,0.15);
+    --brand-soft: #143826;
+    --brand-ink: #5fd59a;
+    --good-soft: #143826;
+    --warn-soft: #3a2a0e;
+    --bad-soft: #3d1a1a;
+    --info-soft: #182742;
+    --neutral-soft: #262a30;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121416;
+  --card: #1b1e22;
+  --card-2: #22262b;
+  --ink: #eef0f2;
+  --ink-2: #b9bec6;
+  --muted: #7d838c;
+  --line: rgba(255,255,255,0.08);
+  --line-2: rgba(255,255,255,0.15);
+  --brand-soft: #143826;
+  --brand-ink: #5fd59a;
+  --good-soft: #143826;
+  --warn-soft: #3a2a0e;
+  --bad-soft: #3d1a1a;
+  --info-soft: #182742;
+  --neutral-soft: #262a30;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-variant-numeric: tabular-nums; }
+button, input, select, textarea { font-family: inherit; font-size: 14px; color: inherit; }
+svg.ic { width: 18px; height: 18px; flex-shrink: 0; }
+.hidden { display: none !important; }
+
+/* ---------- Header ---------- */
+.app-header {
+  position: sticky; top: 0; z-index: 20;
+  background: var(--charcoal);
+  color: #fff;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.bar {
+  max-width: 1180px; margin: 0 auto;
+  display: flex; align-items: center; gap: 16px;
+  padding: 12px 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; flex-shrink: 0; }
+.brand-mark { width: 34px; height: 34px; border-radius: 10px; background: #fff; display: grid; place-items: center; }
+.brand-mark svg { width: 24px; height: 24px; }
+.brand-name { font-weight: 800; font-size: 16px; letter-spacing: -0.01em; line-height: 1.1; }
+.brand-name span { color: #3fd68a; }
+.brand-sub { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; }
+.nav { display: flex; gap: 4px; margin-left: 12px; background: rgba(255,255,255,0.06); padding: 4px; border-radius: 12px; }
+.nav-btn {
+  border: 0; background: transparent; color: rgba(255,255,255,0.7);
+  height: 34px; padding: 0 14px; border-radius: 9px; cursor: pointer; font-weight: 600; font-size: 13px;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.nav-btn svg.ic { width: 16px; height: 16px; }
+.nav-btn:hover { color: #fff; }
+.nav-btn.active { background: #fff; color: var(--charcoal); }
+.bar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.sync { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: rgba(255,255,255,0.65); white-space: nowrap; }
+.sync .dot { width: 8px; height: 8px; border-radius: 50%; background: #3fd68a; box-shadow: 0 0 0 3px rgba(63,214,138,0.18); }
+.sync.saving .dot { background: #f2b33d; box-shadow: 0 0 0 3px rgba(242,179,61,0.2); animation: pulse 1s infinite; }
+.sync.error .dot { background: #ff6b6b; box-shadow: 0 0 0 3px rgba(255,107,107,0.2); }
+@keyframes pulse { 50% { opacity: 0.4; } }
+.hbtn {
+  height: 36px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.14);
+  background: transparent; color: #fff; padding: 0 12px; cursor: pointer; font-weight: 600; font-size: 13px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.hbtn:hover { background: rgba(255,255,255,0.08); }
+.hbtn.brand-btn { background: var(--brand); border-color: var(--brand); }
+.hbtn.brand-btn:hover { background: #158f56; }
+
+/* ---------- Layout ---------- */
+.wrap { max-width: 1180px; margin: 0 auto; padding: 22px 16px 110px; }
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.page-title { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+.page-sub { color: var(--muted); font-size: 13px; margin: 2px 0 0; }
+.grid { display: grid; gap: 14px; }
+.g-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.g-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g-main { grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 18px;
+}
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.card-title { font-size: 15px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 8px; }
+.card-note { font-size: 12px; color: var(--muted); }
+.section { margin-top: 14px; }
+
+/* ---------- KPI ---------- */
+.kpi { position: relative; overflow: hidden; }
+.kpi .k-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px; }
+.kpi .k-val { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin: 8px 0 4px; line-height: 1.1; }
+.kpi .k-foot { font-size: 12px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.kpi.hero { background: var(--charcoal); color: #fff; border-color: var(--charcoal); }
+.kpi.hero .k-label { color: rgba(255,255,255,0.6); }
+.kpi.hero .k-foot { color: rgba(255,255,255,0.75); }
+.kpi.hero::after {
+  content: ""; position: absolute; right: -40px; top: -40px; width: 140px; height: 140px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(63,214,138,0.35), rgba(63,214,138,0) 70%);
+}
+.delta { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; font-size: 12px; padding: 2px 7px; border-radius: 20px; }
+.delta.up { background: var(--good-soft); color: var(--good); }
+.delta.down { background: var(--bad-soft); color: var(--bad); }
+.delta.flat { background: var(--neutral-soft); color: var(--ink-2); }
+.kpi.hero .delta.up { background: rgba(63,214,138,0.16); color: #3fd68a; }
+.kpi.hero .delta.down { background: rgba(255,107,107,0.16); color: #ff8a8a; }
+.kpi.hero .delta.flat { background: rgba(255,255,255,0.1); color: #fff; }
+
+.mini { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+.mini > div { padding: 4px 14px; border-left: 1px solid var(--line); }
+.mini > div:first-child { border-left: 0; padding-left: 0; }
+.mini .m-val { font-size: 20px; font-weight: 800; }
+.mini .m-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+/* ---------- Pills ---------- */
+.pill { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 10px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.pill .pd { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.s-lead { background: var(--info-soft); color: var(--info); }
+.s-trial { background: var(--warn-soft); color: var(--warn); }
+.s-active { background: var(--good-soft); color: var(--good); }
+.s-churned { background: var(--neutral-soft); color: var(--muted); }
+.t-good { color: var(--good); }
+.t-warn { color: var(--warn); }
+.t-bad { color: var(--bad); }
+.t-info { color: var(--info); }
+.t-muted { color: var(--muted); }
+
+/* ---------- Buttons & inputs ---------- */
+.btn {
+  height: 38px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--card);
+  padding: 0 14px; cursor: pointer; font-weight: 600; font-size: 13px; color: var(--ink);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap;
+  transition: background 0.15s, transform 0.05s;
+}
+.btn:hover { background: var(--card-2); }
+.btn:active { transform: scale(0.98); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn.primary:hover { background: #158f56; }
+.btn.dark { background: var(--charcoal); border-color: var(--charcoal); color: #fff; }
+.btn.danger { color: var(--bad); }
+.btn.danger-fill { background: var(--bad); border-color: var(--bad); color: #fff; }
+.btn.sm { height: 32px; padding: 0 10px; font-size: 12px; border-radius: 9px; }
+.btn.icon { width: 32px; padding: 0; }
+.btn:disabled { opacity: 0.55; cursor: default; }
+input[type=text], input[type=number], input[type=date], input[type=password], input[type=search], select, textarea {
+  height: 40px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--card);
+  padding: 0 12px; width: 100%; outline: none;
+}
+textarea { height: auto; padding: 10px 12px; resize: vertical; }
+input:focus, select:focus, textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(25,164,99,0.15); }
+.btn:focus-visible, .chip:focus-visible, .nav-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+.search-box { position: relative; flex: 1; min-width: 200px; }
+.search-box svg { position: absolute; left: 12px; top: 11px; color: var(--muted); }
+.search-box input { padding-left: 38px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  height: 32px; border-radius: 20px; border: 1px solid var(--line-2); background: var(--card);
+  padding: 0 12px; cursor: pointer; font-weight: 600; font-size: 12px; color: var(--ink-2);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.chip .cnt { background: var(--neutral-soft); color: var(--ink-2); border-radius: 10px; padding: 0 6px; font-size: 11px; line-height: 18px; }
+.chip.active { background: var(--charcoal); border-color: var(--charcoal); color: #fff; }
+.chip.active .cnt { background: rgba(255,255,255,0.18); color: #fff; }
+.sort-select { width: auto; min-width: 170px; }
+
+/* ---------- Attention list ---------- */
+.alert-list { display: flex; flex-direction: column; gap: 8px; }
+.alert {
+  display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px;
+  background: var(--card-2); border: 1px solid var(--line);
+}
+.alert .a-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+.alert.bad .a-ic { background: var(--bad-soft); color: var(--bad); }
+.alert.warn .a-ic { background: var(--warn-soft); color: var(--warn); }
+.alert.info .a-ic { background: var(--info-soft); color: var(--info); }
+.alert.good .a-ic { background: var(--good-soft); color: var(--good); }
+.alert .a-body { flex: 1; min-width: 0; }
+.alert .a-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.alert .a-name:hover { text-decoration: underline; }
+.alert .a-text { font-size: 12px; color: var(--ink-2); }
+.alert .a-act { display: flex; gap: 6px; flex-shrink: 0; }
+.empty-state { text-align: center; padding: 34px 16px; color: var(--muted); }
+.empty-state .e-ic { width: 46px; height: 46px; border-radius: 14px; background: var(--brand-soft); color: var(--brand); display: grid; place-items: center; margin: 0 auto 10px; }
+.empty-state b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 2px; }
+
+/* ---------- Funnel ---------- */
+.funnel-bar { display: flex; height: 14px; border-radius: 8px; overflow: hidden; background: var(--neutral-soft); margin: 4px 0 14px; }
+.funnel-bar > div { height: 100%; transition: width 0.4s; }
+.funnel-legend { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.fl-item { padding: 10px; border-radius: 12px; background: var(--card-2); border: 1px solid var(--line); cursor: pointer; }
+.fl-item:hover { border-color: var(--line-2); }
+.fl-item .fl-top { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); font-weight: 600; }
+.fl-item .fl-sw { width: 8px; height: 8px; border-radius: 3px; }
+.fl-item .fl-val { font-size: 22px; font-weight: 800; margin-top: 2px; }
+
+/* ---------- Bars list ---------- */
+.bars { display: flex; flex-direction: column; gap: 12px; }
+.bar-row .br-top { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; margin-bottom: 5px; }
+.bar-row .br-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar-row .br-val { font-weight: 700; flex-shrink: 0; }
+.bar-track { height: 8px; border-radius: 6px; background: var(--neutral-soft); overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; background: var(--brand); }
+
+/* ---------- Client cards ---------- */
+.client-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.cc { display: flex; flex-direction: column; gap: 14px; transition: border-color 0.15s, transform 0.15s; }
+.cc:hover { border-color: var(--line-2); transform: translateY(-1px); }
+.cc-top { display: flex; align-items: flex-start; gap: 12px; }
+.avatar { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-weight: 800; font-size: 15px; color: #fff; flex-shrink: 0; }
+.cc-id { flex: 1; min-width: 0; cursor: pointer; }
+.cc-name { font-weight: 800; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cc-contact { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; border-radius: 12px; background: var(--card-2); }
+.cc-stats .s-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.cc-stats .s-val { font-size: 18px; font-weight: 800; margin-top: 2px; }
+.cc-stats .s-sub { font-size: 12px; color: var(--ink-2); }
+.cc-health { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; }
+.health { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+.health .hd { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.cc-actions { display: flex; gap: 8px; }
+.cc-actions .btn { flex: 1; }
+
+/* ---------- Table ---------- */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.tbl td { padding: 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: 0; }
+.tbl .right { text-align: right; }
+.tx-in { color: var(--good); font-weight: 700; }
+.tx-out { color: var(--bad); font-weight: 700; }
+.tx-type { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+.tx-dot { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; }
+.tx-dot.in { background: var(--good-soft); color: var(--good); }
+.tx-dot.out { background: var(--bad-soft); color: var(--bad); }
+.tx-dot.ref { background: var(--warn-soft); color: var(--warn); }
+.tx-dot svg.ic { width: 15px; height: 15px; }
+
+/* ---------- Charts ---------- */
+.chart-box { position: relative; width: 100%; height: 280px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* ---------- Drawer ---------- */
+.scrim { position: fixed; inset: 0; background: rgba(12,14,16,0.5); z-index: 40; opacity: 0; transition: opacity 0.2s; }
+.scrim.show { opacity: 1; }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(480px, 100%); background: var(--bg); z-index: 41;
+  transform: translateX(100%); transition: transform 0.25s ease; display: flex; flex-direction: column;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.2);
+}
+.drawer.show { transform: translateX(0); }
+.drawer-head { background: var(--charcoal); color: #fff; padding: calc(16px + env(safe-area-inset-top, 0px)) 18px 18px; }
+.drawer-head .dh-top { display: flex; align-items: flex-start; gap: 12px; }
+.drawer-head .dh-name { font-size: 20px; font-weight: 800; line-height: 1.2; word-break: break-word; }
+.drawer-head .dh-contact { font-size: 13px; color: rgba(255,255,255,0.6); }
+.drawer-head .close-x { margin-left: auto; background: rgba(255,255,255,0.1); border: 0; color: #fff; width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
+.dh-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.dh-stats > div { background: rgba(255,255,255,0.07); border-radius: 12px; padding: 10px; }
+.dh-stats .l { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.dh-stats .v { font-size: 17px; font-weight: 800; margin-top: 2px; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 16px 18px calc(24px + env(safe-area-inset-bottom, 0px)); }
+.d-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+.health-banner { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 12px; margin-bottom: 14px; font-size: 13px; font-weight: 600; }
+.health-banner.good { background: var(--good-soft); color: var(--good); }
+.health-banner.warn { background: var(--warn-soft); color: var(--warn); }
+.health-banner.bad { background: var(--bad-soft); color: var(--bad); }
+.health-banner.info { background: var(--info-soft); color: var(--info); }
+.health-banner.muted { background: var(--neutral-soft); color: var(--ink-2); }
+.pay-list { display: flex; flex-direction: column; }
+.pay-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.pay-item:last-child { border-bottom: 0; }
+.pay-item .pi-body { flex: 1; min-width: 0; }
+.pay-item .btn.icon + .btn.icon { margin-left: -4px; }
+.pay-item .pi-amt { font-weight: 800; font-size: 15px; }
+.pay-item .pi-meta { font-size: 12px; color: var(--muted); }
+.timeline { position: relative; padding-left: 22px; }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--line-2); border-radius: 2px; }
+.tl-item { position: relative; padding: 0 0 14px; }
+.tl-item:last-child { padding-bottom: 0; }
+.tl-item .tl-dot { position: absolute; left: -22px; top: 3px; width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--bg); }
+.tl-item .tl-title { font-weight: 700; font-size: 13px; }
+.tl-item .tl-date { font-size: 12px; color: var(--muted); }
+
+/* ---------- Modal ---------- */
+.modal-wrap { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(12,14,16,0.55); animation: fade 0.15s; }
+@keyframes fade { from { opacity: 0; } }
+.modal {
+  background: var(--card); border-radius: 20px; width: 100%; max-width: 460px; max-height: calc(100vh - 32px);
+  display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: pop 0.18s ease;
+}
+@keyframes pop { from { transform: translateY(10px) scale(0.98); opacity: 0; } }
+.modal-head { padding: 18px 20px 6px; display: flex; align-items: flex-start; gap: 10px; }
+.modal-head h3 { margin: 0; font-size: 18px; font-weight: 800; }
+.modal-head p { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+.modal-head .close-x { margin-left: auto; background: var(--neutral-soft); border: 0; width: 32px; height: 32px; border-radius: 10px; cursor: pointer; display: grid; place-items: center; color: var(--ink-2); flex-shrink: 0; }
+.modal-body { padding: 12px 20px; overflow-y: auto; }
+.modal-foot { padding: 12px 20px 18px; display: flex; gap: 8px; justify-content: flex-end; }
+.modal-foot .btn { min-width: 100px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 700; color: var(--ink-2); margin-bottom: 6px; }
+.field .hint { font-size: 12px; color: var(--muted); margin-top: 5px; }
+.amount-input { position: relative; }
+.amount-input span { position: absolute; left: 12px; top: 9px; font-weight: 700; color: var(--muted); }
+.amount-input input { padding-left: 28px; font-weight: 700; font-size: 16px; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 6px; }
+.seg button {
+  height: 40px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--card); cursor: pointer;
+  font-weight: 700; font-size: 13px; color: var(--ink-2);
+}
+.seg button.on { border-color: var(--charcoal); background: var(--charcoal); color: #fff; }
+.quick { display: flex; flex-wrap: wrap; gap: 6px; }
+.quick button {
+  border: 1px solid var(--line-2); background: var(--card-2); border-radius: 10px; padding: 6px 10px; cursor: pointer; text-align: left;
+}
+.quick button b { display: block; font-size: 13px; }
+.quick button small { font-size: 11px; color: var(--muted); }
+.quick button.on { border-color: var(--brand); background: var(--brand-soft); }
+.err { color: var(--bad); font-size: 12px; font-weight: 600; margin-top: 4px; min-height: 0; }
+
+/* ---------- Billing ---------- */
+.bill { border-radius: 12px; padding: 11px 12px; background: var(--card-2); border: 1px solid var(--line); }
+.bill-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+.bill-sub { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--ink-2); margin-top: 6px; }
+.bill.bad { background: var(--bad-soft); border-color: transparent; }
+.bill.warn { background: var(--warn-soft); border-color: transparent; }
+.bill.bad .bill-top { color: var(--bad); }
+.bill.warn .bill-top { color: var(--warn); }
+.prog { height: 6px; border-radius: 6px; background: var(--neutral-soft); overflow: hidden; margin-top: 8px; }
+.bill.bad .prog, .bill.warn .prog { background: rgba(255,255,255,0.55); }
+.prog > div { height: 100%; border-radius: 6px; background: var(--brand); }
+.bill.warn .prog > div { background: var(--warn); }
+.bill.bad .prog > div { background: var(--bad); }
+.daytag { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 20px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+.daytag.good { background: var(--good-soft); color: var(--good); }
+.daytag.warn { background: var(--warn); color: #fff; }
+.daytag.bad { background: var(--bad); color: #fff; }
+.col-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.col-sum > div { padding: 12px; border-radius: 12px; background: var(--card-2); border: 1px solid var(--line); }
+.col-sum .l { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.col-sum .v { font-size: 20px; font-weight: 800; margin-top: 2px; }
+.col-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card-2); }
+.col-row + .col-row { margin-top: 8px; }
+.cd { width: 64px; height: 56px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; line-height: 1; }
+.cd b { font-size: 22px; font-weight: 800; }
+.cd small { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; margin-top: 4px; white-space: nowrap; }
+.cd.bad { background: var(--bad); color: #fff; }
+.cd.warn { background: var(--warn-soft); color: var(--warn); }
+.cd.good { background: var(--good-soft); color: var(--good); }
+.cd.today { background: var(--warn); color: #fff; }
+.col-body { flex: 1; min-width: 0; }
+.col-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.col-name:hover { text-decoration: underline; }
+.col-text { font-size: 12px; color: var(--ink-2); }
+.col-amt { text-align: right; flex-shrink: 0; }
+.col-amt b { display: block; font-size: 16px; font-weight: 800; }
+.col-amt small { font-size: 11px; color: var(--muted); font-weight: 600; }
+.kv { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.kv:last-child { border-bottom: 0; }
+.kv span:first-child { color: var(--muted); }
+.kv span:last-child { font-weight: 700; text-align: right; }
+.sql-box { background: var(--card-2); border: 1px dashed var(--line-2); border-radius: 10px; padding: 10px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; word-break: break-all; user-select: all; }
+.note-box { background: var(--info-soft); color: var(--info); border-radius: 10px; padding: 10px 12px; font-size: 12px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.note-box svg.ic { width: 16px; height: 16px; }
+
+/* ---------- Motion ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes grow { from { transform: scaleX(0); } }
+@keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(214,69,69,0.45); } 70% { box-shadow: 0 0 0 8px rgba(214,69,69,0); } 100% { box-shadow: 0 0 0 0 rgba(214,69,69,0); } }
+@media (prefers-reduced-motion: no-preference) {
+  .anim .page-head, .anim .card, .anim > .chips, .anim > .toolbar { animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
+  .anim .bar-fill, .anim .prog > div, .anim .funnel-bar > div { animation: grow 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; transform-origin: left center; animation-delay: 0.15s; }
+  .cd.bad { animation: ring 2.2s ease-out infinite; }
+  .btn, .chip, .card { transition: background 0.15s, border-color 0.15s, transform 0.15s, box-shadow 0.15s; }
+  .cc:hover { box-shadow: 0 2px 4px rgba(20,22,26,0.05), 0 10px 28px rgba(20,22,26,0.08); }
+}
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(20px);
+  background: var(--charcoal); color: #fff; padding: 11px 16px; border-radius: 12px; font-weight: 600; font-size: 13px;
+  z-index: 80; opacity: 0; transition: all 0.2s; pointer-events: none; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast svg { color: #3fd68a; }
+
+/* ---------- Bottom nav (mobile) ---------- */
+.bottom-nav { display: none; }
+.fab { display: none; }
+
+/* ---------- Auth ---------- */
+.auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--charcoal); }
+.auth-card { width: 100%; max-width: 380px; background: var(--card); border-radius: 22px; padding: 28px; box-shadow: 0 30px 80px rgba(0,0,0,0.4); }
+.auth-card .brand-mark { width: 48px; height: 48px; border-radius: 14px; background: var(--charcoal); margin-bottom: 18px; }
+.auth-card .brand-mark svg { width: 32px; height: 32px; }
+.auth-card h1 { margin: 0; font-size: 22px; font-weight: 800; }
+.auth-card .page-sub { margin-bottom: 20px; }
+.auth-card .btn { width: 100%; height: 44px; margin-top: 4px; }
+.loading { min-height: 100vh; display: grid; place-items: center; color: var(--muted); font-weight: 600; }
+.spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--line-2); border-top-color: var(--brand); animation: spin 0.8s linear infinite; margin: 0 auto 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 980px) {
+  .g-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g-main { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .nav, .hide-m { display: none !important; }
+  .bar { padding: 10px 16px; }
+  .wrap { padding: 16px 16px calc(110px + env(safe-area-inset-bottom, 0px)); }
+  .page-title { font-size: 21px; }
+  .g-2 { grid-template-columns: minmax(0, 1fr); }
+  .kpi .k-val { font-size: 22px; }
+  .card { padding: 15px; }
+  .mini { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 12px; }
+  .mini > div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .funnel-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .client-grid { grid-template-columns: minmax(0, 1fr); }
+  .chart-box { height: 230px; }
+  .alert { flex-wrap: wrap; }
+  .alert .a-act { width: 100%; padding-left: 48px; }
+  .col-row { flex-wrap: wrap; }
+  .col-row .col-act { width: 100%; padding-left: 76px; }
+  .col-row .col-act .btn { width: 100%; }
+  .col-sum { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .col-sum > div { padding: 10px 8px; }
+  .col-sum .v { font-size: 15px; }
+  .sort-select { width: 100%; }
+  .bottom-nav {
+    display: grid; grid-template-columns: repeat(4, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    background: var(--card); border-top: 1px solid var(--line); padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .bottom-nav button {
+    border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 2px;
+    font-size: 11px; font-weight: 700; color: var(--muted); padding: 6px 0; cursor: pointer;
+  }
+  .bottom-nav button.active { color: var(--brand); }
+  .bottom-nav svg.ic { width: 22px; height: 22px; }
+  .fab {
+    display: grid; place-items: center; position: fixed; right: 16px; bottom: calc(78px + env(safe-area-inset-bottom, 0px)); z-index: 31;
+    width: 56px; height: 56px; border-radius: 18px; border: 0; background: var(--brand); color: #fff; cursor: pointer;
+    box-shadow: 0 10px 30px rgba(25,164,99,0.45);
+  }
+  .fab svg.ic { width: 26px; height: 26px; }
+  .tbl.stack thead { display: none; }
+  .tbl.stack, .tbl.stack tbody, .tbl.stack tr, .tbl.stack td { display: block; width: 100%; }
+  .tbl.stack tr { padding: 10px 0; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .tbl.stack tr:last-child { border-bottom: 0; }
+  .tbl.stack td { border: 0; padding: 0; width: auto; }
+  .tbl.stack td.grow { flex: 1 1 60%; }
+  .tbl.stack td.right { margin-left: auto; }
+  .tbl.stack td.m-full { flex-basis: 100%; font-size: 12px; color: var(--muted); padding-left: 38px; }
+  .d-actions { grid-template-columns: repeat(3, 1fr); }
+  .modal-wrap { align-items: flex-end; padding: 0; }
+  .modal { border-radius: 22px 22px 0 0; max-width: 100%; max-height: 92vh; padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
+</style>
+</head>
+<body>
+
+<div id="authLoading" class="loading"><div><div class="spinner"></div>Loading...</div></div>
+
+<div id="authScreen" class="auth-screen hidden">
+  <form class="auth-card" id="loginForm" autocomplete="on">
+    <div class="brand-mark" id="authLogo"></div>
+    <h1>Client Tracker</h1>
+    <p class="page-sub">GrowMyPin private dashboard. Enter your password to unlock.</p>
+    <input type="text" name="username" value="tracker@growmypin.app" autocomplete="username" style="display:none" aria-hidden="true" tabindex="-1">
+    <div class="field">
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" required>
+    </div>
+    <div class="err" id="loginErr"></div>
+    <button class="btn primary" type="submit" id="loginBtn">Unlock</button>
+  </form>
+</div>
+
+<div id="appRoot" class="hidden">
+  <header class="app-header">
+    <div class="bar">
+      <a class="brand" href="#" onclick="go('overview');return false;">
+        <span class="brand-mark" id="headLogo"></span>
+        <span>
+          <div class="brand-name">GrowMy<span>Pin</span></div>
+          <div class="brand-sub">Client Tracker</div>
+        </span>
+      </a>
+      <nav class="nav" id="topNav"></nav>
+      <div class="bar-right">
+        <span class="sync" id="syncBadge"><span class="dot"></span><span class="hide-m" id="syncText">Synced</span></span>
+        <button class="hbtn brand-btn hide-m" type="button" onclick="primaryAction()" id="headPrimary"></button>
+        <button class="hbtn" type="button" id="logoutBtn" title="Lock"></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="view-overview"></section>
+    <section id="view-clients" class="hidden"></section>
+    <section id="view-money" class="hidden"></section>
+    <section id="view-churn" class="hidden"></section>
+  </main>
+
+  <nav class="bottom-nav" id="bottomNav"></nav>
+  <button class="fab" type="button" id="fab" onclick="primaryAction()" aria-label="Add"></button>
+</div>
+
+<div id="drawerRoot"></div>
+<div id="modalRoot"></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ================= Config =================
+var SUPABASE_URL = "__SUPABASE_URL__";
+var SUPABASE_ANON_KEY = "__SUPABASE_ANON_KEY__";
+var LOCK_EMAIL = "tracker@growmypin.app";
+var LOCK_AFTER_HIDDEN_MS = 30000;
+var TRIAL_DAYS = 3;
+var RS = "\u20B9";
+
+// Clear any old saved login from the browser
+try {
+  Object.keys(localStorage).forEach(function (k) {
+    if (k.indexOf("sb-") === 0 && k.indexOf("-auth-token") !== -1) localStorage.removeItem(k);
+  });
+} catch (e) {}
+
+var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: false, autoRefreshToken: true, detectSessionInUrl: false }
+});
+
+// ================= State =================
+var clients = [];
+var expenses = [];
+var ui = {
+  tab: "overview",
+  clientFilter: "open",
+  clientSort: "attention",
+  search: "",
+  moneyRange: "30",
+  txFilter: "all",
+  showAllAlerts: false,
+  showAllCols: false,
+  openClientId: null
+};
+var charts = {};
+var metaSupported = null;
+var animTimer = null;
+var CYCLE_DAYS = 30;
+var DUE_SOON_DAYS = 5;
+var PLANS = {
+  standard: { label: "Standard", desc: "Rs 999 upfront, Rs 4,000 at end of month 1, then Rs 999 every month + milestones" },
+  lockin: { label: "3-month lock-in", desc: "Rs 999 + Rs 2,999 upfront, milestones only, renewal Rs 2,999 every 3 months" },
+  old: { label: "Old offer", desc: "Old offer: one-time upfront (Rs 499 or Rs 999), then milestones only. Add a monthly base only if this client also pays every month." },
+  custom: { label: "Custom", desc: "Same fixed amount every month (set below)" }
+};
+var META_SQL = "alter table clients add column if not exists meta jsonb not null default '{}'::jsonb;";
+
+var STATUS = {
+  lead: { label: "Lead", cls: "s-lead", color: "#3b6fd8" },
+  trial: { label: "Trial", cls: "s-trial", color: "#e0a128" },
+  active: { label: "Active", cls: "s-active", color: "#19a463" },
+  churned: { label: "Churned", cls: "s-churned", color: "#9aa0a8" }
+};
+var CHURN_REASONS = ["Price", "No Results", "Competitor", "Communication Gap", "Other"];
+var REFUND_REASONS = ["Not satisfied", "No results", "Service issue", "Duplicate payment", "Other"];
+var EXPENSE_SOURCES = ["Ads", "Tools/Software", "Freelancer/Team", "Domain/Hosting", "Other"];
+var QUICK_PAYMENTS = [
+  [999, "Base charge"],
+  [499, "Old offer charge"],
+  [2999, "3-month lock-in"],
+  [4000, "Month 1 charge"],
+  [1499, "25K milestone"],
+  [2499, "50K milestone"],
+  [4999, "1L milestone"],
+  [9999, "2L milestone"]
+];
+var MILESTONE_PRESETS = [["25K", 1499], ["50K", 2499], ["1L", 4999], ["2L", 9999]];
+var AVATAR_COLORS = ["#19a463", "#3b6fd8", "#d9822b", "#8b5cf6", "#e05297", "#0f9fb0", "#5b6472", "#c2410c"];
+
+// ================= Icons =================
+var ICONS = {
+  home: '<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.4 3.3-5.5 6.5-5.5s5.9 2.1 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c2 .7 3.2 2.5 3.5 5.2"/>',
+  wallet: '<rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M16 15h2"/><path d="M6 6V5a2 2 0 0 1 2-2h9"/>',
+  churn: '<path d="M4 17 9 12l4 4 7-8"/><path d="M15 8h5v5"/>',
+  down: '<path d="M4 7l5 5 4-4 7 8"/><path d="M15 16h5v-5"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+  lock: '<rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  x: '<path d="M6 6l12 12M18 6 6 18"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  edit: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+  refund: '<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',
+  swap: '<path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/>',
+  rupee: '<path d="M6 4h12M6 9h12M14 4c3 0 4 2 4 3.5S17 13 13 13H7l8 8"/>',
+  alert: '<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17.5v.01"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check: '<path d="m5 12 5 5 9-10"/>',
+  spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+  download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+  phone: '<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+  cal: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  arrowUp: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  arrowDown: '<path d="M12 5v14M6 13l6 6 6-6"/>',
+  chevron: '<path d="m9 6 6 6-6 6"/>',
+  receipt: '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
+  star: '<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'
+};
+function icon(name, extra) {
+  return '<svg class="ic' + (extra ? " " + extra : "") + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICONS[name] || "") + '</svg>';
+}
+var LOGO_SVG = '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M24.5 9.2A10.5 10.5 0 1 0 26.6 17H16.5" fill="none" stroke="#1c1f23" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 21.5 25 11.5M19.5 11.2h5.6v5.6" fill="none" stroke="#19a463" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var LOGO_SVG_LIGHT = LOGO_SVG.replace('stroke="#1c1f23"', 'stroke="#ffffff"');
+
+// ================= Utils =================
+function pad2(n) { return String(n).padStart(2, "0"); }
+function dateKey(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+function todayKey() { return dateKey(new Date()); }
+function parseKey(s) { var d = new Date(String(s).slice(0, 10) + "T00:00:00"); return isNaN(d) ? null : d; }
+function daysBetween(a, b) {
+  var x = parseKey(a), y = parseKey(b);
+  if (!x || !y) return 0;
+  return Math.round((y - x) / 86400000);
+}
+function addDays(key, n) { var d = parseKey(key); d.setDate(d.getDate() + n); return dateKey(d); }
+function monthKey(key) { return String(key).slice(0, 7); }
+function money(n) {
+  n = Number(n) || 0;
+  var neg = n < 0;
+  var s = Math.round(Math.abs(n)).toLocaleString("en-IN");
+  return (neg ? "-" : "") + RS + s;
+}
+function moneyShort(n) {
+  n = Number(n) || 0;
+  var a = Math.abs(n), neg = n < 0 ? "-" : "";
+  if (a >= 10000000) return neg + RS + (a / 10000000).toFixed(1).replace(/\.0$/, "") + "Cr";
+  if (a >= 100000) return neg + RS + (a / 100000).toFixed(1).replace(/\.0$/, "") + "L";
+  if (a >= 1000) return neg + RS + (a / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+  return neg + RS + Math.round(a);
+}
+function fmtDate(s) {
+  var d = parseKey(s);
+  if (!d) return "-";
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+}
+function fmtShort(s) {
+  var d = parseKey(s);
+  if (!d) return "-";
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short" });
+}
+function monthLabel(mk) {
+  var d = parseKey(mk + "-01");
+  return d ? d.toLocaleDateString("en-IN", { month: "short", year: "2-digit" }) : mk;
+}
+function ago(days) {
+  if (days === null || days === undefined) return "-";
+  if (days < 0) return "in " + (-days) + (days === -1 ? " day" : " days");
+  if (days === 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 60) return days + " days ago";
+  var m = Math.floor(days / 30);
+  return m + (m === 1 ? " month ago" : " months ago");
+}
+function plural(n, w) { return n + " " + w + (n === 1 ? "" : "s"); }
+function esc(s) {
+  if (s === null || s === undefined) return "";
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+function initials(name) {
+  var parts = String(name || "?").trim().split(/\s+/);
+  var s = (parts[0] || "?").charAt(0) + (parts.length > 1 ? parts[parts.length - 1].charAt(0) : "");
+  return s.toUpperCase();
+}
+function avatarColor(id) {
+  var h = 0, s = String(id || "");
+  for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function uid(p) { return (p || "c") + "_" + Date.now() + "_" + Math.floor(Math.random() * 10000); }
+function cssVar(name, fb) {
+  var v = getComputedStyle(document.documentElement).getPropertyValue(name);
+  return (v && v.trim()) || fb;
+}
+function findClient(id) { return clients.find(function (c) { return c.id === id; }); }
+function pct(a, b) { return b > 0 ? Math.round((a / b) * 100) : 0; }
+
+// ================= Data layer =================
+function rowToClient(r) {
+  return {
+    id: r.id, name: r.name, email: r.email, status: r.status,
+    payments: r.payments || [], statusHistory: r.status_history || [],
+    churnReason: r.churn_reason, churnDate: r.churn_date,
+    createdAt: r.created_at, updatedAt: r.updated_at,
+    meta: r.meta || {}
+  };
+}
+function clientToRow(c) {
+  var row = {
+    id: c.id, name: c.name, email: c.email || "", status: c.status,
+    payments: c.payments || [], status_history: c.statusHistory || [],
+    churn_reason: c.churnReason || null, churn_date: c.churnDate || null,
+    created_at: c.createdAt, updated_at: c.updatedAt
+  };
+  if (metaSupported !== false) row.meta = c.meta || {};
+  return row;
+}
+function setSync(state) {
+  var el = document.getElementById("syncBadge");
+  var tx = document.getElementById("syncText");
+  if (!el) return;
+  el.className = "sync" + (state === "saving" ? " saving" : state === "error" ? " error" : "");
+  tx.textContent = state === "saving" ? "Saving..." : state === "error" ? "Save failed" : "Synced";
+}
+function handleRes(res, okMsg) {
+  if (res.error) {
+    console.error(res.error);
+    setSync("error");
+    toast("Save failed. Check your connection.", true);
+  } else {
+    setSync("saved");
+    if (okMsg) toast(okMsg);
+  }
+}
+function loadAll() {
+  return Promise.all([
+    sb.from("clients").select("*").then(function (res) {
+      if (res.error) throw res.error;
+      var data = res.data || [];
+      if (data.length) metaSupported = Object.prototype.hasOwnProperty.call(data[0], "meta");
+      clients = data.map(rowToClient);
+    }),
+    sb.from("expenses").select("*").then(function (res) {
+      if (res.error) throw res.error;
+      expenses = (res.data || []).map(function (r) {
+        return { id: r.id, amount: Number(r.amount) || 0, source: r.source, date: r.date, note: r.note };
+      });
+    })
+  ]);
+}
+function saveClient(c, okMsg) {
+  setSync("saving");
+  var row = clientToRow(c);
+  return sb.from("clients").upsert(row).then(function (res) {
+    if (res.error && row.meta && /meta/i.test(String(res.error.message || ""))) {
+      metaSupported = false;
+      delete row.meta;
+      return sb.from("clients").upsert(row).then(function (r2) { handleRes(r2, okMsg); });
+    }
+    handleRes(res, okMsg);
+  });
+}
+function removeClient(id, okMsg) {
+  setSync("saving");
+  return sb.from("clients").delete().eq("id", id).then(function (res) { handleRes(res, okMsg); });
+}
+function saveExpense(t, okMsg) {
+  setSync("saving");
+  return sb.from("expenses").upsert({ id: t.id, amount: t.amount, source: t.source, date: t.date, note: t.note || "" })
+    .then(function (res) { handleRes(res, okMsg); });
+}
+function removeExpense(id, okMsg) {
+  setSync("saving");
+  return sb.from("expenses").delete().eq("id", id).then(function (res) { handleRes(res, okMsg); });
+}
+
+// ================= Billing engine =================
+function isMilestone(p) { return !!p.msId || /milestone/i.test(String(p.note || "")); }
+// Milestones hit by a client live in c.meta.milestones:
+// [{ id, label, amount, hitDate, paidDate, paidAmount }]
+function msList(c) {
+  var arr = (c.meta && Array.isArray(c.meta.milestones)) ? c.meta.milestones : [];
+  return arr.slice().sort(function (a, b) { return String(a.hitDate || "").localeCompare(String(b.hitDate || "")); });
+}
+// When a milestone payment is logged, mark the matching pending milestone as paid
+function linkMilestonePayment(c, p) {
+  if (!p || p.msId || !((Number(p.amount) || 0) > 0) || !/milestone/i.test(String(p.note || ""))) return;
+  var pending = msList(c).filter(function (m) { return !m.paidDate; });
+  if (!pending.length) return;
+  var note = String(p.note || "").toLowerCase();
+  var hit = pending.find(function (m) { return note.indexOf(String(m.label || "").toLowerCase()) !== -1; }) ||
+            pending.find(function (m) { return Number(m.amount) === Number(p.amount); });
+  if (!hit) return;
+  hit.paidDate = p.date;
+  hit.paidAmount = Number(p.amount) || 0;
+  p.msId = hit.id;
+}
+function detectPlan(c) {
+  var m = c.meta || {};
+  if (m.plan && PLANS[m.plan]) return m.plan;
+  var firstPlanPay = (c.payments || []).filter(function (p) { return (Number(p.amount) || 0) > 0 && !isMilestone(p); })
+    .sort(function (a, b) { return String(a.date || "").localeCompare(String(b.date || "")); })[0];
+  if (firstPlanPay && Number(firstPlanPay.amount) === 499) return "old";
+  var lock = (c.payments || []).some(function (p) { return Number(p.amount) === 2999 || /lock/i.test(String(p.note || "")); });
+  return lock ? "lockin" : "standard";
+}
+function planUpfront(plan, meta) {
+  if (plan === "lockin") return 3998;
+  if (plan === "custom") return Number(meta.amount) || 0;
+  if (plan === "old") return meta.upfront != null ? (Number(meta.upfront) || 0) : oldGuessUpfront(meta);
+  return 999;
+}
+function oldGuessUpfront(meta) { return meta && meta._guess ? meta._guess : 499; }
+function planCharge(plan, k, meta) {
+  if (plan === "lockin") return k % 3 === 0 ? 2999 : 0;
+  if (plan === "custom") return Number(meta.amount) || 0;
+  if (plan === "old") return Number(meta.amount) || 0;
+  return k === 1 ? 4000 : 999;
+}
+function chargeName(plan, k) {
+  if (k === 0) return plan === "lockin" ? "Upfront + lock-in" : plan === "old" ? "Old offer charge" : "Upfront charge";
+  if (plan === "lockin") return "Lock-in renewal";
+  if (plan === "standard" && k === 1) return "Month 1 charge";
+  return "Month " + (k + 1) + " base charge";
+}
+// Every paying client runs in 30-day months counted from their first payment
+// (or the billing start date set on the client). Each month end has a fixed
+// charge from the plan. Milestone payments are tracked separately.
+function billing(c) {
+  var today = todayKey();
+  var meta = c.meta || {};
+  var plan = detectPlan(c);
+  if (plan === "old" && meta.upfront == null) meta = Object.assign({}, meta, { _guess: 499 });
+  var pays = (c.payments || []).filter(function (p) { return p.date && p.date <= today; });
+  var firstPaid = pays.filter(function (p) { return (Number(p.amount) || 0) > 0; }).map(function (p) { return p.date; }).sort()[0];
+  var b = { plan: plan, planLabel: PLANS[plan].label, anchor: meta.billingStart || firstPaid || null, milestones: 0 };
+  var msPending = msList(c).filter(function (m) { return !m.paidDate && m.hitDate && m.hitDate <= today; });
+  b.msPending = msPending;
+  b.msDue = msPending.reduce(function (s, m) { return s + (Number(m.amount) || 0); }, 0);
+  if (!b.anchor) return b;
+  var paidPlan = 0;
+  pays.forEach(function (p) {
+    var a = Number(p.amount) || 0;
+    if (isMilestone(p)) { if (a > 0) b.milestones += a; }
+    else paidPlan += a;
+  });
+  var daysSince = Math.max(0, daysBetween(b.anchor, today));
+  var kPassed = Math.floor(daysSince / CYCLE_DAYS);
+  var upfront = planUpfront(plan, meta);
+  var expectedNow = upfront;
+  for (var j = 1; j <= kPassed; j++) expectedNow += planCharge(plan, j, meta);
+  var outstanding = Math.max(0, expectedNow - paidPlan);
+  var overdueSince = null, overdueK = null;
+  if (outstanding > 0) {
+    var cum = upfront;
+    if (cum > paidPlan) { overdueSince = b.anchor; overdueK = 0; }
+    else {
+      for (var i = 1; i <= kPassed; i++) {
+        cum += planCharge(plan, i, meta);
+        if (cum > paidPlan) { overdueSince = addDays(b.anchor, CYCLE_DAYS * i); overdueK = i; break; }
+      }
+    }
+  }
+  var credit = Math.max(0, paidPlan - expectedNow);
+  var k = kPassed + 1;
+  var nextCharge = planCharge(plan, k, meta);
+  b.month = k;
+  b.dayInMonth = daysSince - kPassed * CYCLE_DAYS + 1;
+  b.progress = Math.min(1, (daysSince - kPassed * CYCLE_DAYS) / CYCLE_DAYS);
+  b.nextDate = addDays(b.anchor, CYCLE_DAYS * k);
+  b.daysLeft = daysBetween(today, b.nextDate);
+  b.nextCharge = nextCharge;
+  b.nextAmount = Math.max(0, nextCharge - credit);
+  b.nextName = chargeName(plan, k);
+  b.outstanding = outstanding;
+  b.overdueSince = overdueSince;
+  b.overdueK = overdueK;
+  b.overdueName = overdueK === null ? "" : chargeName(plan, overdueK);
+  // Milestones that were hit but not paid yet are added to what must be collected now
+  b.planOutstanding = outstanding;
+  b.planOverdueName = b.overdueName;
+  b.msOnly = false;
+  if (b.msDue > 0) {
+    var msName = msPending[0].label + " milestone";
+    if (outstanding > 0) {
+      b.overdueName = b.overdueName + " + " + (msPending.length === 1 ? msName : msPending.length + " milestones");
+      if (msPending[0].hitDate < overdueSince) overdueSince = msPending[0].hitDate;
+    } else {
+      b.msOnly = true;
+      b.overdueName = msPending.length === 1 ? msName : msPending.length + " milestones";
+      overdueSince = msPending[0].hitDate;
+    }
+    outstanding += b.msDue;
+    b.outstanding = outstanding;
+    b.overdueSince = overdueSince;
+  }
+  b.daysOver = overdueSince ? Math.max(0, daysBetween(overdueSince, today)) : 0;
+  b.paidPlan = paidPlan;
+  b.expected = expectedNow;
+  b.credit = credit;
+  // state for UI
+  if (outstanding > 0 && b.daysOver > 0) b.state = "over";
+  else if (outstanding > 0) b.state = "today";
+  else if (b.nextAmount > 0 && b.daysLeft <= DUE_SOON_DAYS) b.state = "soon";
+  else b.state = "ok";
+  b.collectNow = outstanding;
+  b.collectNext = b.nextAmount;
+  return b;
+}
+function monthEndedLabel(b) {
+  if (b.msOnly) return (b.msPending.length === 1 ? b.msPending[0].label + " milestone" : b.msPending.length + " milestones") + " hit";
+  if (b.overdueK === 0) return "Upfront payment pending";
+  return "Month " + b.overdueK + " complete";
+}
+function billLine(b) {
+  if (b.state === "over") return esc(monthEndedLabel(b)) + " " + plural(b.daysOver, "day") + " ago";
+  if (b.state === "today") return b.msOnly ? esc(b.overdueName) + " hit today, payment pending" : b.overdueK === 0 ? "Upfront payment pending" : "Month " + b.overdueK + " completes today";
+  if (b.nextAmount > 0) return "Month " + b.month + " ends in " + plural(b.daysLeft, "day");
+  return "Month " + b.month + " &middot; milestones only";
+}
+
+// ================= Derived info =================
+function info(c) {
+  var today = todayKey();
+  var pays = (c.payments || []).slice().sort(function (a, b) { return String(a.date || "").localeCompare(String(b.date || "")); });
+  var revenue = 0, refunds = 0, paidCount = 0, last = null, upcoming = [], first = null;
+  pays.forEach(function (p) {
+    var amt = Number(p.amount) || 0;
+    if (amt > 0 && p.date && p.date > today) { upcoming.push(p); return; }
+    revenue += amt;
+    if (amt < 0) refunds += -amt;
+    if (amt > 0) { paidCount++; last = p; if (!first) first = p; }
+  });
+  var hist = c.statusHistory || [];
+  var statusSince = c.createdAt || today;
+  for (var i = hist.length - 1; i >= 0; i--) {
+    if (hist[i].status === c.status) statusSince = hist[i].date;
+    else break;
+  }
+  var trialEntry = hist.find(function (h) { return h.status === "trial"; });
+  var firstTrial = trialEntry ? trialEntry.date : c.createdAt;
+  var everActive = paidCount > 0 || hist.some(function (h) { return h.status === "active"; }) || c.status === "active";
+  var everTrial = c.status !== "lead" || hist.some(function (h) { return h.status !== "lead"; });
+  var daysSincePaid = last ? daysBetween(last.date, today) : null;
+  var daysInStatus = Math.max(0, daysBetween(statusSince, today));
+  var age = Math.max(0, daysBetween(c.createdAt, today));
+  var h;
+  if (c.status === "lead") {
+    h = daysInStatus >= 5 ? { tone: "warn", label: "Going cold", text: "Lead for " + plural(daysInStatus, "day") + ". Follow up today." }
+                          : { tone: "info", label: "New lead", text: "Added " + ago(daysInStatus) + ". Pitch the free trial." };
+  } else if (c.status === "trial") {
+    var over = daysInStatus - TRIAL_DAYS;
+    h = daysInStatus >= TRIAL_DAYS
+      ? { tone: "bad", label: "Trial ended", text: over > 0 ? "Trial ended " + plural(over, "day") + " ago. Convert or close." : "Trial ends today. Ask for the payment." }
+      : { tone: "warn", label: "Trial day " + (daysInStatus + 1) + "/" + TRIAL_DAYS, text: "Trial day " + (daysInStatus + 1) + " of " + TRIAL_DAYS + ". Share early results." };
+  } else if (c.status === "active") {
+    var bl = billing(c);
+    if (!bl.anchor) h = { tone: "bad", label: "No payment logged", text: "Active but no payment recorded yet." };
+    else if (bl.state === "over") h = { tone: "bad", label: plural(bl.daysOver, "day") + " over", text: monthEndedLabel(bl) + " " + plural(bl.daysOver, "day") + " ago. Collect " + money(bl.outstanding) + "." };
+    else if (bl.state === "today") h = { tone: "warn", label: "Due today", text: (bl.msOnly ? bl.overdueName + " hit today" : bl.overdueK === 0 ? "Upfront payment" : "Month " + bl.overdueK + " ends today") + ". Collect " + money(bl.outstanding) + "." };
+    else if (bl.state === "soon") h = { tone: "warn", label: plural(bl.daysLeft, "day") + " left", text: "Month " + bl.month + " ends in " + plural(bl.daysLeft, "day") + ". " + money(bl.nextAmount) + " due on " + fmtShort(bl.nextDate) + "." };
+    else h = { tone: "good", label: "On track", text: "Month " + bl.month + ", day " + bl.dayInMonth + " of " + CYCLE_DAYS + ". " + (bl.nextAmount > 0 ? money(bl.nextAmount) + " due on " + fmtShort(bl.nextDate) + "." : "Milestones only this month.") };
+  } else {
+    h = { tone: "muted", label: "Churned", text: "Left on " + fmtDate(c.churnDate || c.updatedAt) + (c.churnReason ? " - " + c.churnReason : "") + "." };
+  }
+  return {
+    revenue: revenue, refunds: refunds, paidCount: paidCount, last: last, first: first, upcoming: upcoming,
+    daysSincePaid: daysSincePaid, daysInStatus: daysInStatus, age: age, firstTrial: firstTrial,
+    everActive: everActive, everTrial: everTrial, health: h,
+    bill: c.status === "active" ? billing(c) : null
+  };
+}
+function attentionRank(c, inf) {
+  var t = inf.health.tone;
+  return t === "bad" ? 0 : t === "warn" ? 1 : t === "info" ? 2 : t === "good" ? 3 : 4;
+}
+
+function incomeEntries() {
+  var out = [];
+  var today = todayKey();
+  clients.forEach(function (c) {
+    (c.payments || []).forEach(function (p, idx) {
+      if ((Number(p.amount) || 0) > 0 && p.date && p.date > today) return;
+      out.push({ kind: "income", amount: Number(p.amount) || 0, date: p.date, source: c.name, clientId: c.id, idx: idx, note: p.note || "" });
+    });
+  });
+  return out;
+}
+function sumInRange(list, from, to) {
+  var s = 0;
+  list.forEach(function (e) { if (e.date >= from && e.date <= to) s += Number(e.amount) || 0; });
+  return s;
+}
+
+function getAlerts() {
+  var today = todayKey();
+  var out = [];
+  clients.forEach(function (c) {
+    if (c.status === "churned") return;
+    var inf = info(c);
+    var t = inf.health.tone;
+    var isBilling = c.status === "active" && inf.bill && inf.bill.anchor;
+    if (!isBilling && (t === "bad" || t === "warn" || c.status === "trial")) {
+      out.push({ client: c, inf: inf, tone: t, text: inf.health.text, rank: t === "bad" ? 0 : t === "warn" ? 1 : 2 });
+    }
+    inf.upcoming.forEach(function (p) {
+      out.push({ client: c, inf: inf, tone: "info", text: "Expected " + money(p.amount) + " on " + fmtShort(p.date) + (p.note ? " (" + p.note + ")" : ""), rank: 2, upcoming: true });
+    });
+  });
+  out.sort(function (a, b) { return a.rank - b.rank || b.inf.daysInStatus - a.inf.daysInStatus; });
+  return out;
+}
+
+function getCollections() {
+  return clients.filter(function (c) { return c.status === "active"; })
+    .map(function (c) { return { c: c, b: billing(c) }; })
+    .filter(function (x) { return x.b.anchor; })
+    .sort(function (a, b) {
+      var ra = a.b.state === "over" ? 0 : a.b.state === "today" ? 1 : 2;
+      var rb = b.b.state === "over" ? 0 : b.b.state === "today" ? 1 : 2;
+      if (ra !== rb) return ra - rb;
+      if (ra === 0) return b.b.daysOver - a.b.daysOver;
+      var za = a.b.nextAmount > 0 ? 0 : 1, zb = b.b.nextAmount > 0 ? 0 : 1;
+      return za - zb || a.b.daysLeft - b.b.daysLeft;
+    });
+}
+function countdownBox(b) {
+  if (b.state === "over") return '<div class="cd bad"><b class="num">' + b.daysOver + '</b><small>' + (b.daysOver === 1 ? "day over" : "days over") + '</small></div>';
+  if (b.state === "today") return '<div class="cd today"><b>!</b><small>due today</small></div>';
+  var cls = b.nextAmount > 0 && b.daysLeft <= DUE_SOON_DAYS ? "warn" : "good";
+  return '<div class="cd ' + cls + '"><b class="num">' + b.daysLeft + '</b><small>' + (b.daysLeft === 1 ? "day left" : "days left") + '</small></div>';
+}
+function collectionRow(x) {
+  var c = x.c, b = x.b, id = esc(c.id);
+  var amt = b.outstanding > 0 ? b.outstanding : b.nextAmount;
+  var sub = b.outstanding > 0 ? "to collect now" : (b.nextAmount > 0 ? "due " + fmtShort(b.nextDate) : "no fixed charge");
+  var text = billLine(b) + " &middot; " + esc(b.planLabel) + (b.milestones ? " &middot; " + money(b.milestones) + " milestones" : "");
+  return '<div class="col-row">' + countdownBox(b) +
+    '<div class="col-body"><div class="col-name" onclick="openClient(\'' + id + '\')">' + esc(c.name) + '</div><div class="col-text">' + text + '</div></div>' +
+    '<div class="col-amt"><b class="num ' + (b.outstanding > 0 ? "t-bad" : "") + '">' + (amt > 0 ? money(amt) : "-") + '</b><small>' + sub + '</small></div>' +
+    '<div class="col-act"><button class="btn sm ' + (b.state === "ok" ? "" : "primary") + '" type="button" onclick="openPaymentModal(\'' + id + '\')">' + icon("plus") + 'Payment</button></div></div>';
+}
+
+// ================= Navigation =================
+var TABS = [
+  ["overview", "Overview", "home"],
+  ["clients", "Clients", "users"],
+  ["money", "Money", "wallet"],
+  ["churn", "Churn", "down"]
+];
+function renderNav() {
+  document.getElementById("topNav").innerHTML = TABS.map(function (t) {
+    return '<button class="nav-btn' + (ui.tab === t[0] ? " active" : "") + '" type="button" onclick="go(\'' + t[0] + '\')">' + icon(t[2]) + t[1] + '</button>';
+  }).join("");
+  document.getElementById("bottomNav").innerHTML = TABS.map(function (t) {
+    return '<button class="' + (ui.tab === t[0] ? "active" : "") + '" type="button" onclick="go(\'' + t[0] + '\')">' + icon(t[2]) + t[1] + '</button>';
+  }).join("");
+  var isMoney = ui.tab === "money";
+  document.getElementById("headPrimary").innerHTML = icon("plus") + (isMoney ? "Add expense" : "Add client");
+  document.getElementById("fab").innerHTML = icon("plus");
+  document.getElementById("fab").setAttribute("aria-label", isMoney ? "Add expense" : "Add client");
+}
+function go(tab) {
+  ui.tab = tab;
+  TABS.forEach(function (t) {
+    document.getElementById("view-" + t[0]).classList.toggle("hidden", t[0] !== tab);
+  });
+  renderNav();
+  renderCurrent();
+  window.scrollTo(0, 0);
+  playIntro(document.getElementById("view-" + tab));
+}
+function reducedMotion() {
+  try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }
+}
+function playIntro(el) {
+  if (!el || reducedMotion()) return;
+  el.classList.remove("anim");
+  void el.offsetWidth;
+  el.classList.add("anim");
+  Array.prototype.forEach.call(el.querySelectorAll(".page-head, .card"), function (n, i) { n.style.setProperty("--i", Math.min(i, 10)); });
+  animateCounts(el);
+  clearTimeout(animTimer);
+  animTimer = setTimeout(function () { el.classList.remove("anim"); }, 1500);
+}
+function animateCounts(root) {
+  Array.prototype.forEach.call(root.querySelectorAll("[data-count]"), function (el) {
+    var target = Number(el.getAttribute("data-count")) || 0;
+    var fmt = el.getAttribute("data-fmt") || "int";
+    var finalHtml = el.innerHTML;
+    var start = null, dur = 750;
+    function show(v) {
+      el.textContent = fmt === "money" ? money(v) : fmt === "pct" ? Math.round(v) + "%" : String(Math.round(v));
+    }
+    function step(ts) {
+      if (!start) start = ts;
+      var t = Math.min(1, (ts - start) / dur);
+      var e = 1 - Math.pow(1 - t, 3);
+      if (t < 1) { show(target * e); requestAnimationFrame(step); }
+      else el.innerHTML = finalHtml;
+    }
+    show(0);
+    requestAnimationFrame(step);
+  });
+}
+function countAttr(n, fmt) { return ' data-count="' + (Number(n) || 0) + '" data-fmt="' + fmt + '"'; }
+function primaryAction() {
+  if (ui.tab === "money") openExpenseModal();
+  else openAddClient();
+}
+function renderCurrent() {
+  if (ui.tab === "overview") renderOverview();
+  else if (ui.tab === "clients") renderClients();
+  else if (ui.tab === "money") renderMoney();
+  else if (ui.tab === "churn") renderChurn();
+}
+function refresh() {
+  renderCurrent();
+  if (ui.openClientId) renderDrawer();
+}
+
+// ================= Overview =================
+function renderOverview() {
+  var today = todayKey();
+  var mk = monthKey(today);
+  var monthStart = mk + "-01";
+  var prev = parseKey(monthStart); prev.setMonth(prev.getMonth() - 1);
+  var prevStart = dateKey(prev);
+  var prevLastDay = new Date(prev.getFullYear(), prev.getMonth() + 1, 0).getDate();
+  var prevSameDay = addDays(prevStart, Math.min(parseKey(today).getDate(), prevLastDay) - 1);
+  var inc = incomeEntries();
+
+  var revThis = sumInRange(inc, monthStart, today);
+  var revPrev = sumInRange(inc, prevStart, prevSameDay);
+  var expThis = sumInRange(expenses, monthStart, today);
+  var profitThis = revThis - expThis;
+  var deltaPct = revPrev > 0 ? Math.round(((revThis - revPrev) / revPrev) * 100) : null;
+
+  var counts = { lead: 0, trial: 0, active: 0, churned: 0 };
+  var lifetime = 0, payers = 0, everTrial = 0, everActive = 0, newActiveThisMonth = 0;
+  clients.forEach(function (c) {
+    counts[c.status] = (counts[c.status] || 0) + 1;
+    var inf = info(c);
+    lifetime += inf.revenue;
+    if (inf.paidCount > 0) payers++;
+    if (inf.everTrial) everTrial++;
+    if (inf.everActive) everActive++;
+    if ((c.statusHistory || []).some(function (h) { return h.status === "active" && h.date >= monthStart; })) newActiveThisMonth++;
+  });
+  var arpc = payers > 0 ? lifetime / payers : 0;
+  var conv = pct(everActive, everTrial);
+  var churnRate = pct(counts.churned, counts.active + counts.churned);
+  var alerts = getAlerts();
+  var cols = getCollections();
+  var overdueTotal = 0, overdueCount = 0, due7 = 0, due30 = 0;
+  cols.forEach(function (x) {
+    if (x.b.outstanding > 0) { overdueTotal += x.b.outstanding; overdueCount++; }
+    else {
+      if (x.b.nextAmount > 0 && x.b.daysLeft <= 7) due7 += x.b.nextAmount;
+      if (x.b.nextAmount > 0 && x.b.daysLeft <= 30) due30 += x.b.nextAmount;
+    }
+  });
+  var dayName = new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+
+  var deltaHtml = deltaPct === null
+    ? '<span class="delta flat">New</span> vs same days last month'
+    : '<span class="delta ' + (deltaPct > 0 ? "up" : deltaPct < 0 ? "down" : "flat") + '">' + icon(deltaPct >= 0 ? "arrowUp" : "arrowDown") + Math.abs(deltaPct) + '%</span> vs ' + moneyShort(revPrev) + ' same days last month';
+
+  var html = '';
+  html += '<div class="page-head"><div><h1 class="page-title">' + greeting() + '</h1><p class="page-sub">' + esc(dayName) + ' &middot; ' + (overdueCount ? '<span class="t-bad" style="font-weight:700">' + money(overdueTotal) + ' overdue</span> &middot; ' : '') + plural(alerts.length + overdueCount, "thing") + ' need your attention</p></div></div>';
+
+  html += '<div class="grid g-4">';
+  html += '<div class="card kpi hero"><div class="k-label">' + icon("rupee") + 'Revenue this month</div><div class="k-val num"' + countAttr(revThis, "money") + '>' + money(revThis) + '</div><div class="k-foot">' + deltaHtml + '</div></div>';
+  html += kpiCard("Net profit this month", money(profitThis), (profitThis >= 0 ? '<span class="t-good">' : '<span class="t-bad">') + "Expenses " + money(expThis) + '</span>', profitThis >= 0 ? "spark" : "alert", profitThis, "money");
+  html += kpiCard("Paying clients", counts.active, (newActiveThisMonth > 0 ? '<span class="delta up">+' + newActiveThisMonth + '</span> joined this month' : 'No new paying clients this month yet'), "users", counts.active, "int");
+  html += kpiCard("To collect now", '<span class="' + (overdueTotal > 0 ? "t-bad" : "t-good") + '">' + money(overdueTotal) + '</span>', overdueCount ? plural(overdueCount, "client") + " overdue &middot; " + money(due7) + " more due in 7 days" : money(due7) + " due in next 7 days", "clock");
+  html += '</div>';
+
+  html += '<div class="card section"><div class="mini">' +
+    miniStat(counts.lead, "Leads", "t-info") +
+    miniStat(counts.trial, "On trial", "t-warn") +
+    miniStat(conv + "%", "Trial to paid") +
+    miniStat(moneyShort(arpc), "Avg paid per client") +
+    '</div></div>';
+
+  // Collections
+  var shownCols = ui.showAllCols ? cols : cols.filter(function (x) { return x.b.outstanding > 0 || (x.b.nextAmount > 0 && x.b.daysLeft <= 7); });
+  html += '<div class="card section"><div class="card-head"><h2 class="card-title">' + icon("rupee") + 'Collections</h2><span class="card-note">30-day months from first payment</span></div>';
+  html += '<div class="col-sum"><div><div class="l">Overdue</div><div class="v num ' + (overdueTotal ? "t-bad" : "") + '">' + money(overdueTotal) + '</div></div>' +
+    '<div><div class="l">Next 7 days</div><div class="v num">' + money(due7) + '</div></div>' +
+    '<div><div class="l">Next 30 days</div><div class="v num">' + money(due30) + '</div></div></div>';
+  if (!cols.length) {
+    html += '<div class="card-note">No paying clients yet. Log a first payment to start their billing month.</div>';
+  } else if (!shownCols.length) {
+    html += '<div class="empty-state" style="padding:18px"><div class="e-ic">' + icon("check") + '</div><b>Nothing due this week</b>Every paying client is up to date.</div>';
+  } else {
+    html += shownCols.map(collectionRow).join("");
+  }
+  if (cols.length && cols.length !== shownCols.length || ui.showAllCols) {
+    html += '<div style="text-align:center;margin-top:12px"><button class="btn sm" type="button" onclick="ui.showAllCols=!ui.showAllCols;renderOverview()">' + (ui.showAllCols ? "Show only due" : "Show all " + cols.length + " paying clients") + '</button></div>';
+  }
+  html += '</div>';
+
+  html += '<div class="grid g-main section">';
+  // Attention
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">' + icon("alert") + 'Follow-ups</h2><span class="card-note">' + plural(alerts.length, "item") + '</span></div>';
+  if (alerts.length === 0) {
+    html += '<div class="empty-state"><div class="e-ic">' + icon("check") + '</div><b>All clear</b>No ended trials or cold leads.</div>';
+  } else {
+    var shown = ui.showAllAlerts ? alerts : alerts.slice(0, 6);
+    html += '<div class="alert-list">' + shown.map(alertRow).join("") + '</div>';
+    if (alerts.length > 6) {
+      html += '<div style="text-align:center;margin-top:10px"><button class="btn sm" type="button" onclick="ui.showAllAlerts=!ui.showAllAlerts;renderOverview()">' + (ui.showAllAlerts ? "Show less" : "Show all " + alerts.length) + '</button></div>';
+    }
+  }
+  html += '</div>';
+
+  // Pipeline + top clients
+  var total = counts.lead + counts.trial + counts.active + counts.churned;
+  html += '<div class="grid" style="align-content:start">';
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">' + icon("churn") + 'Pipeline</h2><span class="card-note">' + plural(total, "client") + ' total</span></div>';
+  html += '<div class="funnel-bar">' + ["lead", "trial", "active", "churned"].map(function (s) {
+    return total ? '<div style="width:' + (counts[s] / total * 100) + '%;background:' + STATUS[s].color + '"></div>' : '';
+  }).join("") + '</div>';
+  html += '<div class="funnel-legend">' + ["lead", "trial", "active", "churned"].map(function (s) {
+    var target = s === "churned" ? "go('churn')" : "ui.clientFilter='" + s + "';go('clients')";
+    return '<div class="fl-item" role="button" tabindex="0" onclick="' + target + '"><div class="fl-top"><span class="fl-sw" style="background:' + STATUS[s].color + '"></span>' + STATUS[s].label + '</div><div class="fl-val num">' + counts[s] + '</div></div>';
+  }).join("") + '</div></div>';
+
+  var top = clients.map(function (c) { return { c: c, r: info(c).revenue }; })
+    .filter(function (x) { return x.r > 0; })
+    .sort(function (a, b) { return b.r - a.r; }).slice(0, 5);
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">' + icon("star") + 'Top clients</h2><span class="card-note">by total paid</span></div>';
+  if (top.length === 0) html += '<div class="card-note">No payments logged yet.</div>';
+  else {
+    var maxR = top[0].r;
+    html += '<div class="bars">' + top.map(function (x) {
+      return '<div class="bar-row" style="cursor:pointer" onclick="openClient(\'' + esc(x.c.id) + '\')"><div class="br-top"><span class="br-name">' + esc(x.c.name) + '</span><span class="br-val num">' + money(x.r) + '</span></div><div class="bar-track"><div class="bar-fill" style="width:' + (x.r / maxR * 100) + '%"></div></div></div>';
+    }).join("") + '</div>';
+  }
+  html += '</div></div></div>';
+
+  // Monthly chart
+  html += '<div class="card section"><div class="card-head"><h2 class="card-title">' + icon("wallet") + 'Last 6 months</h2>' +
+    '<div class="legend"><span><i style="background:var(--brand)"></i>Revenue</span><span><i style="background:var(--bad)"></i>Expenses</span><span><i style="background:var(--ink);border-radius:50%"></i>Profit</span></div></div>' +
+    '<div class="chart-box"><canvas id="chOverview"></canvas></div></div>';
+
+  document.getElementById("view-overview").innerHTML = html;
+  drawMonthlyChart();
+}
+function greeting() {
+  var h = new Date().getHours();
+  return h < 12 ? "Good morning, Nikhil" : h < 17 ? "Good afternoon, Nikhil" : "Good evening, Nikhil";
+}
+function kpiCard(label, val, foot, ic, countN, countFmt) {
+  var attr = countN === undefined ? "" : countAttr(countN, countFmt || "money");
+  return '<div class="card kpi"><div class="k-label">' + icon(ic) + esc(label) + '</div><div class="k-val num"' + attr + '>' + val + '</div><div class="k-foot">' + foot + '</div></div>';
+}
+function miniStat(val, label, cls) {
+  return '<div><div class="m-val num ' + (cls || "") + '">' + val + '</div><div class="m-label">' + label + '</div></div>';
+}
+function alertRow(a) {
+  var c = a.client;
+  var ic = a.upcoming ? "cal" : a.tone === "bad" ? "alert" : c.status === "lead" ? "phone" : "clock";
+  var id = esc(c.id);
+  var actions = '';
+  if (a.upcoming) {
+    actions = '<button class="btn sm" type="button" onclick="openClient(\'' + id + '\')">View</button>';
+  } else if (c.status === "lead") {
+    actions = '<button class="btn sm" type="button" onclick="openStatusModal(\'' + id + '\',\'trial\')">Start trial</button>';
+  } else if (c.status === "trial") {
+    actions = '<button class="btn sm primary" type="button" onclick="openPaymentModal(\'' + id + '\')">' + icon("plus") + 'Payment</button><button class="btn sm" type="button" onclick="openStatusModal(\'' + id + '\')">Status</button>';
+  } else {
+    actions = '<button class="btn sm primary" type="button" onclick="openPaymentModal(\'' + id + '\')">' + icon("plus") + 'Payment</button>';
+  }
+  return '<div class="alert ' + (a.tone === "muted" ? "info" : a.tone) + '"><div class="a-ic">' + icon(ic) + '</div>' +
+    '<div class="a-body"><div class="a-name" onclick="openClient(\'' + id + '\')">' + esc(c.name) + ' ' + statusPill(c.status) + '</div><div class="a-text">' + esc(a.text) + '</div></div>' +
+    '<div class="a-act">' + actions + '</div></div>';
+}
+function statusPill(s) {
+  var m = STATUS[s] || STATUS.lead;
+  return '<span class="pill ' + m.cls + '"><span class="pd"></span>' + m.label + '</span>';
+}
+
+// ================= Clients =================
+function renderClients() {
+  var all = clients.map(function (c) { return { c: c, inf: info(c) }; });
+  var counts = { open: 0, attention: 0, lead: 0, trial: 0, active: 0, churned: 0, all: all.length };
+  all.forEach(function (x) {
+    counts[x.c.status] = (counts[x.c.status] || 0) + 1;
+    if (x.c.status !== "churned") counts.open++;
+    if (x.c.status !== "churned" && (x.inf.health.tone === "bad" || x.inf.health.tone === "warn")) counts.attention++;
+  });
+
+  var q = ui.search.toLowerCase();
+  var list = all.filter(function (x) {
+    var c = x.c, f = ui.clientFilter;
+    var okF = f === "all" || (f === "open" && c.status !== "churned") ||
+      (f === "attention" && c.status !== "churned" && (x.inf.health.tone === "bad" || x.inf.health.tone === "warn")) || c.status === f;
+    var okQ = !q || String(c.name || "").toLowerCase().indexOf(q) > -1 || String(c.email || "").toLowerCase().indexOf(q) > -1;
+    return okF && okQ;
+  });
+  var s = ui.clientSort;
+  list.sort(function (a, b) {
+    if (s === "revenue") return b.inf.revenue - a.inf.revenue;
+    if (s === "name") return String(a.c.name).localeCompare(String(b.c.name));
+    if (s === "newest") return String(b.c.createdAt || "").localeCompare(String(a.c.createdAt || ""));
+    if (s === "updated") return String(b.c.updatedAt || "").localeCompare(String(a.c.updatedAt || ""));
+    return attentionRank(a.c, a.inf) - attentionRank(b.c, b.inf) || (b.inf.daysSincePaid || 0) - (a.inf.daysSincePaid || 0);
+  });
+
+  var filters = [["open", "All open"], ["attention", "Needs attention"], ["lead", "Leads"], ["trial", "Trial"], ["active", "Active"], ["churned", "Churned"], ["all", "Everything"]];
+  var html = '<div class="page-head"><div><h1 class="page-title">Clients</h1><p class="page-sub">' + plural(counts.active, "paying client") + ', ' + counts.trial + ' on trial, ' + plural(counts.lead, "lead") + '</p></div>' +
+    '<div style="display:flex;gap:8px"><button class="btn" type="button" onclick="exportClientsCSV()">' + icon("download") + '<span class="hide-m">Export</span></button><button class="btn primary hide-m" type="button" onclick="openAddClient()">' + icon("plus") + 'Add client</button></div></div>';
+
+  html += '<div class="toolbar"><div class="search-box">' + icon("search") + '<input type="search" id="clientSearch" placeholder="Search by name, email or phone" value="' + esc(ui.search) + '"></div>' +
+    '<select class="sort-select" id="clientSort">' +
+    [["attention", "Sort: Needs attention first"], ["revenue", "Sort: Highest paid"], ["updated", "Sort: Recently updated"], ["newest", "Sort: Newest first"], ["name", "Sort: Name A-Z"]].map(function (o) {
+      return '<option value="' + o[0] + '"' + (ui.clientSort === o[0] ? " selected" : "") + '>' + o[1] + '</option>';
+    }).join("") + '</select></div>';
+
+  html += '<div class="chips" style="margin-bottom:16px">' + filters.map(function (f) {
+    return '<button class="chip' + (ui.clientFilter === f[0] ? " active" : "") + '" type="button" onclick="ui.clientFilter=\'' + f[0] + '\';renderClients()">' + f[1] + '<span class="cnt">' + (counts[f[0]] || 0) + '</span></button>';
+  }).join("") + '</div>';
+
+  if (list.length === 0) {
+    html += '<div class="card"><div class="empty-state"><div class="e-ic">' + icon("users") + '</div><b>No clients here</b>' + (clients.length ? "Try another filter or search." : "Add your first client to get started.") + '<div style="margin-top:12px"><button class="btn primary" type="button" onclick="openAddClient()">' + icon("plus") + 'Add client</button></div></div></div>';
+  } else {
+    html += '<div class="client-grid">' + list.map(clientCard).join("") + '</div>';
+  }
+  document.getElementById("view-clients").innerHTML = html;
+
+  var sEl = document.getElementById("clientSearch");
+  sEl.addEventListener("input", function () {
+    ui.search = sEl.value;
+    var pos = sEl.selectionStart;
+    renderClients();
+    var n = document.getElementById("clientSearch");
+    n.focus();
+    try { n.setSelectionRange(pos, pos); } catch (e) {}
+  });
+  document.getElementById("clientSort").addEventListener("change", function (e) { ui.clientSort = e.target.value; renderClients(); });
+}
+function clientCard(x) {
+  var c = x.c, inf = x.inf, id = esc(c.id);
+  var lastTxt = inf.last ? ago(inf.daysSincePaid) : "No payment yet";
+  var lastSub = inf.last ? money(inf.last.amount) + (inf.last.note ? " &middot; " + esc(inf.last.note) : "") : (inf.upcoming.length ? "Expected " + fmtShort(inf.upcoming[0].date) : "&nbsp;");
+  var actions = c.status === "churned"
+    ? '<button class="btn sm" type="button" onclick="openStatusModal(\'' + id + '\',\'trial\')">' + icon("swap") + 'Win back</button>'
+    : '<button class="btn sm primary" type="button" onclick="openPaymentModal(\'' + id + '\')">' + icon("plus") + 'Payment</button><button class="btn sm" type="button" onclick="openStatusModal(\'' + id + '\')">' + icon("swap") + 'Status</button>';
+  return '<div class="card cc">' +
+    '<div class="cc-top"><div class="avatar" style="background:' + avatarColor(c.id) + '">' + esc(initials(c.name)) + '</div>' +
+      '<div class="cc-id" onclick="openClient(\'' + id + '\')"><div class="cc-name">' + esc(c.name) + '</div><div class="cc-contact">' + (c.email ? esc(c.email) : "No contact saved") + '</div></div>' +
+      statusPill(c.status) + '</div>' +
+    '<div class="cc-stats"><div><div class="s-label">Total paid</div><div class="s-val num">' + money(inf.revenue) + '</div><div class="s-sub">' + plural(inf.paidCount, "payment") + (inf.refunds ? ' &middot; <span class="t-bad">' + money(inf.refunds) + ' refunded</span>' : "") + '</div></div>' +
+      '<div><div class="s-label">Last payment</div><div class="s-val">' + lastTxt + '</div><div class="s-sub num">' + lastSub + '</div></div></div>' +
+    (inf.bill && inf.bill.anchor ? billStrip(inf.bill) :
+    '<div class="cc-health"><span class="health t-' + inf.health.tone + '"><span class="hd"></span>' + esc(inf.health.label) + '</span><span class="t-muted">Client for ' + plural(inf.age, "day") + '</span></div>') +
+    '<div class="cc-actions">' + actions + '<button class="btn sm icon" type="button" onclick="openClient(\'' + id + '\')" aria-label="Open">' + icon("chevron") + '</button></div>' +
+  '</div>';
+}
+
+function billTag(b) {
+  if (b.state === "over") return '<span class="daytag bad">' + plural(b.daysOver, "day") + ' over</span>';
+  if (b.state === "today") return '<span class="daytag warn">Due today</span>';
+  if (b.state === "soon") return '<span class="daytag warn">' + plural(b.daysLeft, "day") + ' left</span>';
+  return '<span class="daytag good">' + plural(b.daysLeft, "day") + ' left</span>';
+}
+function billStrip(b) {
+  var cls = b.state === "over" ? "bad" : (b.state === "today" || b.state === "soon") ? "warn" : "";
+  var right = b.outstanding > 0 ? "Collect <b>" + money(b.outstanding) + "</b>" : b.nextAmount > 0 ? "<b>" + money(b.nextAmount) + "</b> due " + fmtShort(b.nextDate) : "Milestones only";
+  var width = b.state === "over" || b.state === "today" ? 100 : Math.round(b.progress * 100);
+  return '<div class="bill ' + cls + '"><div class="bill-top"><span>' + billLine(b) + '</span>' + billTag(b) + '</div>' +
+    '<div class="prog"><div style="width:' + Math.max(3, width) + '%"></div></div>' +
+    '<div class="bill-sub"><span>' + esc(b.planLabel) + ' &middot; day ' + Math.min(b.dayInMonth, CYCLE_DAYS) + '/' + CYCLE_DAYS + '</span><span class="num">' + right + '</span></div></div>';
+}
+
+// ================= Client drawer =================
+function openClient(id) {
+  ui.openClientId = id;
+  var root = document.getElementById("drawerRoot");
+  root.innerHTML = '<div class="scrim" id="scrim" onclick="closeClient()"></div><aside class="drawer" id="drawer" role="dialog" aria-modal="true"></aside>';
+  renderDrawer();
+  requestAnimationFrame(function () {
+    document.getElementById("scrim").classList.add("show");
+    document.getElementById("drawer").classList.add("show");
+  });
+  document.body.style.overflow = "hidden";
+}
+function closeClient() {
+  ui.openClientId = null;
+  var d = document.getElementById("drawer"), s = document.getElementById("scrim");
+  if (d) d.classList.remove("show");
+  if (s) s.classList.remove("show");
+  document.body.style.overflow = "";
+  setTimeout(function () { if (!ui.openClientId) document.getElementById("drawerRoot").innerHTML = ""; }, 250);
+}
+function renderDrawer() {
+  var c = findClient(ui.openClientId);
+  var d = document.getElementById("drawer");
+  if (!d) return;
+  if (!c) { closeClient(); return; }
+  var inf = info(c), id = esc(c.id);
+
+  var pays = (c.payments || []).map(function (p, i) { return { p: p, i: i }; })
+    .sort(function (a, b) { return String(b.p.date || "").localeCompare(String(a.p.date || "")); });
+  var today = todayKey();
+
+  var tl = [];
+  tl.push({ date: c.createdAt, title: "Added to tracker", color: "#9aa0a8" });
+  (c.statusHistory || []).forEach(function (h, i) {
+    if (i === 0 && h.date === c.createdAt) { tl[0].title = "Added as " + (STATUS[h.status] || STATUS.lead).label; tl[0].color = (STATUS[h.status] || STATUS.lead).color; return; }
+    tl.push({ date: h.date, title: "Moved to " + (STATUS[h.status] || STATUS.lead).label + (h.status === "churned" && c.churnReason ? " (" + c.churnReason + ")" : ""), color: (STATUS[h.status] || STATUS.lead).color });
+  });
+  (c.payments || []).forEach(function (p) {
+    var amt = Number(p.amount) || 0;
+    tl.push({ date: p.date, title: (amt < 0 ? "Refunded " + money(-amt) : (p.date > today ? "Expected " : "Paid ") + money(amt)) + (p.note ? " - " + p.note : ""), color: amt < 0 ? "#d64545" : "#19a463" });
+  });
+  msList(c).forEach(function (m) {
+    tl.push({ date: m.hitDate, title: m.label + " milestone hit (" + money(m.amount) + ")" + (m.paidDate ? "" : " - payment pending"), color: m.paidDate ? "#3b6fd8" : "#d9822b" });
+  });
+  tl.sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
+
+  var html = '<div class="drawer-head"><div class="dh-top"><div class="avatar" style="background:' + avatarColor(c.id) + '">' + esc(initials(c.name)) + '</div>' +
+    '<div style="min-width:0"><div class="dh-name">' + esc(c.name) + '</div><div class="dh-contact">' + (c.email ? esc(c.email) : "No contact saved") + '</div><div style="margin-top:8px">' + statusPill(c.status) + '</div></div>' +
+    '<button class="close-x" type="button" onclick="closeClient()" aria-label="Close">' + icon("x") + '</button></div>' +
+    '<div class="dh-stats"><div><div class="l">Total paid</div><div class="v num">' + money(inf.revenue) + '</div></div>' +
+    '<div><div class="l">Payments</div><div class="v num">' + inf.paidCount + '</div></div>' +
+    '<div><div class="l">Days with us</div><div class="v num">' + inf.age + '</div></div></div></div>';
+
+  html += '<div class="drawer-body">';
+  html += '<div class="health-banner ' + inf.health.tone + '">' + icon(inf.health.tone === "good" ? "check" : inf.health.tone === "bad" ? "alert" : "clock") + esc(inf.health.text) + '</div>';
+  var bl = billing(c);
+  if (c.status === "active" && bl.anchor) {
+    html += '<div class="card" style="margin-bottom:14px"><div class="card-head"><h3 class="card-title">' + icon("cal") + 'Billing</h3><button class="btn sm" type="button" onclick="openPlanModal(\'' + id + '\')">' + icon("edit") + 'Edit plan</button></div>' +
+      billStrip(bl) +
+      '<div style="margin-top:10px">' +
+      '<div class="kv"><span>Plan</span><span>' + esc(bl.planLabel) + '</span></div>' +
+      '<div class="kv"><span>Billing started</span><span>' + fmtDate(bl.anchor) + '</span></div>' +
+      '<div class="kv"><span>Current month</span><span>Month ' + bl.month + ', day ' + Math.min(bl.dayInMonth, CYCLE_DAYS) + ' of ' + CYCLE_DAYS + '</span></div>' +
+      '<div class="kv"><span>To collect now</span><span class="' + (bl.outstanding > 0 ? "t-bad" : "t-good") + '">' + (bl.outstanding > 0 ? money(bl.outstanding) + " (" + esc(bl.overdueName) + ")" : "Nothing pending") + '</span></div>' +
+      '<div class="kv"><span>Next charge</span><span>' + (bl.nextAmount > 0 ? money(bl.nextAmount) + " on " + fmtDate(bl.nextDate) : "Milestones only") + '</span></div>' +
+      '<div class="kv"><span>Plan payments</span><span>' + money(bl.paidPlan) + ' of ' + money(bl.expected) + ' due so far</span></div>' +
+      '<div class="kv"><span>Milestones paid</span><span>' + money(bl.milestones) + '</span></div>' +
+      '</div></div>';
+  }
+  if (c.status === "active" || msList(c).length) html += milestonesCard(c);
+  html += '<div class="d-actions">' +
+    (c.status !== "churned" ? '<button class="btn primary" type="button" onclick="openPaymentModal(\'' + id + '\')">' + icon("plus") + 'Payment</button>' : '<button class="btn primary" type="button" onclick="openStatusModal(\'' + id + '\',\'trial\')">' + icon("swap") + 'Win back</button>') +
+    '<button class="btn" type="button" onclick="openStatusModal(\'' + id + '\')">' + icon("swap") + 'Status</button>' +
+    '<button class="btn" type="button" onclick="openRefundModal(\'' + id + '\')">' + icon("refund") + 'Refund</button>' +
+    '<button class="btn" type="button" onclick="openEditClient(\'' + id + '\')">' + icon("edit") + 'Edit</button>' +
+    '<button class="btn danger" type="button" onclick="confirmDeleteClient(\'' + id + '\')">' + icon("trash") + 'Delete</button>' +
+    '<button class="btn" type="button" onclick="closeClient()">Close</button>' +
+    '</div>';
+
+  html += '<div class="card" style="margin-bottom:14px"><div class="card-head"><h3 class="card-title">' + icon("receipt") + 'Payments</h3><span class="card-note">' + (pays.length === 1 ? "1 entry" : pays.length + " entries") + '</span></div>';
+  if (pays.length === 0) html += '<div class="card-note">No payments logged yet.</div>';
+  else {
+    html += '<div class="pay-list">' + pays.map(function (x) {
+      var amt = Number(x.p.amount) || 0, fut = x.p.date > today;
+      var dotCls = amt < 0 ? "ref" : "in";
+      return '<div class="pay-item"><span class="tx-dot ' + dotCls + '">' + icon(amt < 0 ? "refund" : fut ? "cal" : "check") + '</span>' +
+        '<div class="pi-body"><div class="pi-amt num ' + (amt < 0 ? "t-bad" : "") + '">' + money(amt) + (fut ? ' <span class="pill s-lead" style="height:20px;font-size:11px">Upcoming</span>' : "") + '</div>' +
+        '<div class="pi-meta">' + fmtDate(x.p.date) + (x.p.note ? " &middot; " + esc(x.p.note) : "") + '</div></div>' +
+        '<button class="btn sm icon" type="button" onclick="openEditPayment(\'' + id + '\',' + x.i + ')" aria-label="Edit payment">' + icon("edit") + '</button>' +
+        '<button class="btn sm icon" type="button" onclick="confirmDeletePayment(\'' + id + '\',' + x.i + ')" aria-label="Delete payment">' + icon("trash") + '</button></div>';
+    }).join("") + '</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-head"><h3 class="card-title">' + icon("clock") + 'Timeline</h3></div><div class="timeline">' + tl.map(function (t) {
+    return '<div class="tl-item"><span class="tl-dot" style="background:' + t.color + '"></span><div class="tl-title">' + esc(t.title) + '</div><div class="tl-date">' + fmtDate(t.date) + '</div></div>';
+  }).join("") + '</div></div>';
+  html += '</div>';
+  d.innerHTML = html;
+}
+
+// ================= Milestones =================
+function milestonesCard(c) {
+  var id = esc(c.id), today = todayKey();
+  var list = msList(c).slice().reverse();
+  // Older milestone payments logged before milestone tracking existed
+  var legacy = (c.payments || []).filter(function (p) { return !p.msId && (Number(p.amount) || 0) > 0 && /milestone/i.test(String(p.note || "")); })
+    .sort(function (a, b) { return String(b.date || "").localeCompare(String(a.date || "")); });
+  var pendingAmt = 0, paidAmt = 0;
+  list.forEach(function (m) { if (m.paidDate) paidAmt += Number(m.paidAmount || m.amount) || 0; else pendingAmt += Number(m.amount) || 0; });
+  legacy.forEach(function (p) { paidAmt += Number(p.amount) || 0; });
+  var locked = metaSupported === false;
+  var html = '<div class="card" style="margin-bottom:14px"><div class="card-head"><h3 class="card-title">' + icon("spark") + 'Milestones</h3>' +
+    (locked ? '' : '<button class="btn sm" type="button" onclick="openMilestoneModal(\'' + id + '\')">' + icon("plus") + 'Milestone hit</button>') + '</div>';
+  if (locked) {
+    html += '<div class="note-box" style="display:block;margin-bottom:10px">To track milestones, run this once in Supabase (SQL Editor) and refresh:<div class="sql-box" style="margin-top:8px">' + esc(META_SQL) + '</div></div>';
+  }
+  html += '<div class="kv"><span>Pending</span><span class="' + (pendingAmt > 0 ? "t-bad" : "t-good") + '">' + (pendingAmt > 0 ? money(pendingAmt) : "Nothing pending") + '</span></div>' +
+    '<div class="kv"><span>Paid so far</span><span>' + money(paidAmt) + '</span></div>';
+  if (!list.length && !legacy.length) {
+    html += '<div class="card-note" style="margin-top:10px">No milestones yet. When this client hits one, tap Milestone hit.</div></div>';
+    return html;
+  }
+  html += '<div class="pay-list" style="margin-top:10px">';
+  list.forEach(function (m) {
+    var paid = !!m.paidDate;
+    var waiting = paid ? 0 : Math.max(0, daysBetween(m.hitDate, today));
+    var status = paid
+      ? '<span class="t-good">Paid ' + money(m.paidAmount || m.amount) + ' on ' + fmtDate(m.paidDate) + (m.paidDate && m.hitDate ? ' (' + plural(Math.max(0, daysBetween(m.hitDate, m.paidDate)), "day") + ' after hit)' : '') + '</span>'
+      : '<span class="t-bad">Payment pending' + (waiting > 0 ? ' for ' + plural(waiting, "day") : ' since today') + '</span>';
+    html += '<div class="pay-item"><span class="tx-dot ' + (paid ? "in" : "ref") + '">' + icon(paid ? "check" : "clock") + '</span>' +
+      '<div class="pi-body"><div class="pi-amt num">' + esc(m.label) + ' milestone &middot; ' + money(m.amount) + '</div>' +
+      '<div class="pi-meta">Hit on ' + fmtDate(m.hitDate) + ' &middot; ' + status + '</div></div>' +
+      (paid ? '' : '<button class="btn sm primary" type="button" onclick="openMsPaidModal(\'' + id + '\',\'' + esc(m.id) + '\')">' + icon("check") + 'Paid</button>') +
+      '<button class="btn sm icon" type="button" onclick="openMilestoneModal(\'' + id + '\',\'' + esc(m.id) + '\')" aria-label="Edit milestone">' + icon("edit") + '</button>' +
+      '<button class="btn sm icon" type="button" onclick="confirmDeleteMilestone(\'' + id + '\',\'' + esc(m.id) + '\')" aria-label="Delete milestone">' + icon("trash") + '</button></div>';
+  });
+  legacy.forEach(function (p) {
+    html += '<div class="pay-item"><span class="tx-dot in">' + icon("check") + '</span>' +
+      '<div class="pi-body"><div class="pi-amt num">' + esc(p.note) + ' &middot; ' + money(p.amount) + '</div>' +
+      '<div class="pi-meta"><span class="t-good">Paid on ' + fmtDate(p.date) + '</span> &middot; hit date not recorded</div></div></div>';
+  });
+  html += '</div></div>';
+  return html;
+}
+function openMilestoneModal(id, msId) {
+  var c = findClient(id); if (!c) return;
+  var m = msId ? msList(c).find(function (x) { return x.id === msId; }) : null;
+  var body =
+    '<div class="field"><label>Milestone</label><div class="chips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">' + MILESTONE_PRESETS.map(function (o) {
+      return '<button class="btn sm" type="button" onclick="document.getElementById(\'ms_label\').value=\'' + o[0] + '\';document.getElementById(\'ms_amount\').value=' + o[1] + '">' + o[0] + ' &middot; ' + money(o[1]) + '</button>';
+    }).join("") + '</div>' +
+    '<input type="text" id="ms_label" placeholder="e.g. 25K" value="' + esc(m ? m.label : "") + '"><div class="hint">Name of the milestone, for example 25K, 50K, 1L or 2L.</div></div>' +
+    '<div class="field"><label for="ms_amount">Amount to collect</label><div class="amount-input"><span>' + RS + '</span><input type="number" id="ms_amount" inputmode="numeric" placeholder="1499" value="' + esc(m ? m.amount : "") + '"></div></div>' +
+    '<div class="field"><label for="ms_hit">Date the milestone was hit</label>' + dateChips("ms_hit") + '<input type="date" id="ms_hit" value="' + esc(m ? m.hitDate : todayKey()) + '"></div>' +
+    (m ? '' :
+    '<div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="ms_paid" onchange="document.getElementById(\'ms_paid_wrap\').style.display=this.checked?\'block\':\'none\'" style="width:auto"> Payment already received</label></div>' +
+    '<div class="field" id="ms_paid_wrap" style="display:none"><label for="ms_paid_date">Payment date</label>' + dateChips("ms_paid_date") + '<input type="date" id="ms_paid_date" value="' + todayKey() + '"><div class="hint">This also logs the payment in the Payments list.</div></div>') +
+    '<div class="err" id="ms_err"></div>';
+  openModal(m ? "Edit milestone" : "Milestone hit", esc(c.name), body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="saveMilestone(\'' + esc(id) + '\',\'' + (m ? esc(m.id) : "") + '\')">' + icon("check") + 'Save</button>');
+}
+function saveMilestone(id, msId) {
+  var c = findClient(id); if (!c) return;
+  if (metaSupported === false) return showErr("ms_err", "Run the SQL shown on the client first, then refresh.");
+  var label = val("ms_label");
+  var amount = Number(val("ms_amount"));
+  var hit = val("ms_hit");
+  if (!label) return showErr("ms_err", "Enter the milestone name, e.g. 25K.");
+  if (!amount || amount <= 0) return showErr("ms_err", "Enter the amount to collect.");
+  if (!hit) return showErr("ms_err", "Pick the date it was hit.");
+  c.meta = Object.assign({}, c.meta || {});
+  c.meta.milestones = (c.meta.milestones || []).slice();
+  if (msId) {
+    var m = c.meta.milestones.find(function (x) { return x.id === msId; });
+    if (!m) return;
+    m.label = label; m.amount = amount; m.hitDate = hit;
+    (c.payments || []).forEach(function (p) { if (p.msId === msId) p.note = label + " milestone"; });
+    c.updatedAt = todayKey();
+    saveClient(c, label + " milestone updated");
+  } else {
+    var nm = { id: uid("m"), label: label, amount: amount, hitDate: hit, paidDate: null, paidAmount: null };
+    var paidNow = document.getElementById("ms_paid") && document.getElementById("ms_paid").checked;
+    if (paidNow) {
+      var pd = val("ms_paid_date");
+      if (!pd) return showErr("ms_err", "Pick the payment date.");
+      nm.paidDate = pd; nm.paidAmount = amount;
+      c.payments = c.payments || [];
+      c.payments.push({ amount: amount, date: pd, note: label + " milestone", msId: nm.id });
+    }
+    c.meta.milestones.push(nm);
+    c.updatedAt = todayKey();
+    saveClient(c, label + " milestone " + (paidNow ? "logged as paid" : "added, payment pending"));
+  }
+  closeModal();
+  refresh();
+}
+function openMsPaidModal(id, msId) {
+  var c = findClient(id); if (!c) return;
+  var m = msList(c).find(function (x) { return x.id === msId; }); if (!m) return;
+  var body =
+    '<div class="note-box">' + icon("spark") + ' ' + esc(m.label) + ' milestone hit on ' + fmtDate(m.hitDate) + '</div>' +
+    '<div class="field"><label for="mp_amount">Amount received</label><div class="amount-input"><span>' + RS + '</span><input type="number" id="mp_amount" inputmode="numeric" value="' + esc(m.amount) + '"></div></div>' +
+    '<div class="field"><label for="mp_date">Payment date</label>' + dateChips("mp_date") + '<input type="date" id="mp_date" value="' + todayKey() + '"></div>' +
+    '<div class="err" id="mp_err"></div>';
+  openModal("Milestone payment", esc(c.name), body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="saveMsPaid(\'' + esc(id) + '\',\'' + esc(msId) + '\')">' + icon("check") + 'Mark paid</button>');
+}
+function saveMsPaid(id, msId) {
+  var c = findClient(id); if (!c) return;
+  var amount = Number(val("mp_amount"));
+  var date = val("mp_date");
+  if (!amount || amount <= 0) return showErr("mp_err", "Enter a valid amount.");
+  if (!date) return showErr("mp_err", "Pick a date.");
+  c.meta = Object.assign({}, c.meta || {});
+  c.meta.milestones = (c.meta.milestones || []).slice();
+  var m = c.meta.milestones.find(function (x) { return x.id === msId; }); if (!m) return;
+  m.paidDate = date; m.paidAmount = amount;
+  c.payments = c.payments || [];
+  c.payments.push({ amount: amount, date: date, note: m.label + " milestone", msId: m.id });
+  c.updatedAt = todayKey();
+  saveClient(c, money(amount) + " milestone payment logged for " + c.name);
+  closeModal();
+  refresh();
+}
+function confirmDeleteMilestone(id, msId) {
+  var c = findClient(id); if (!c) return;
+  var m = msList(c).find(function (x) { return x.id === msId; }); if (!m) return;
+  var body = '<p style="margin:0 0 14px;color:var(--ink-2)">This removes the <b>' + esc(m.label) + '</b> milestone hit on ' + fmtDate(m.hitDate) + '.' + (m.paidDate ? ' Its payment of ' + money(m.paidAmount || m.amount) + ' stays in the Payments list.' : '') + '</p>';
+  openModal("Delete milestone?", esc(c.name), body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn danger-fill" type="button" onclick="doDeleteMilestone(\'' + esc(id) + '\',\'' + esc(msId) + '\')">Delete</button>');
+}
+function doDeleteMilestone(id, msId) {
+  var c = findClient(id); if (!c) return;
+  c.meta = Object.assign({}, c.meta || {});
+  c.meta.milestones = (c.meta.milestones || []).filter(function (x) { return x.id !== msId; });
+  (c.payments || []).forEach(function (p) { if (p.msId === msId) delete p.msId; });
+  c.updatedAt = todayKey();
+  saveClient(c, "Milestone deleted");
+  closeModal();
+  refresh();
+}
+
+// ================= Modals =================
+function openModal(title, sub, body, foot) {
+  var html = '<div class="modal-wrap" id="modalWrap" onclick="if(event.target===this)closeModal()"><div class="modal" role="dialog" aria-modal="true">' +
+    '<div class="modal-head"><div><h3>' + title + '</h3>' + (sub ? '<p>' + sub + '</p>' : '') + '</div><button class="close-x" type="button" onclick="closeModal()" aria-label="Close">' + icon("x") + '</button></div>' +
+    '<div class="modal-body">' + body + '</div><div class="modal-foot">' + foot + '</div></div></div>';
+  document.getElementById("modalRoot").innerHTML = html;
+  var first = document.querySelector("#modalRoot input:not([type=hidden]), #modalRoot select");
+  if (first && window.innerWidth > 760) setTimeout(function () { first.focus(); }, 30);
+}
+function closeModal() { document.getElementById("modalRoot").innerHTML = ""; }
+function showErr(id, msg) { var e = document.getElementById(id); if (e) e.textContent = msg; }
+function val(id) { var e = document.getElementById(id); return e ? String(e.value).trim() : ""; }
+function segHtml(id, options, current) {
+  return '<div class="seg" id="' + id + '" data-value="' + esc(current) + '">' + options.map(function (o) {
+    return '<button type="button" class="' + (o[0] === current ? "on" : "") + '" data-v="' + esc(o[0]) + '" onclick="segPick(\'' + id + '\',this)">' + o[1] + '</button>';
+  }).join("") + '</div>';
+}
+function segPick(id, btn) {
+  var wrap = document.getElementById(id);
+  wrap.dataset.value = btn.getAttribute("data-v");
+  Array.prototype.forEach.call(wrap.querySelectorAll("button"), function (b) { b.classList.toggle("on", b === btn); });
+  if (id === "st_seg") { toggleChurnReason(); onStageSegChange(); }
+  if (id === "pl_seg") togglePlanFields();
+}
+function segVal(id) { var w = document.getElementById(id); return w ? w.dataset.value : ""; }
+// Index of the history entry where the client's CURRENT stage started
+function stageStartIndex(c) {
+  var hist = c.statusHistory || [];
+  var idx = -1;
+  for (var i = hist.length - 1; i >= 0; i--) {
+    if (hist[i].status === c.status) idx = i;
+    else break;
+  }
+  return idx;
+}
+function stageStartDate(c) {
+  var i = stageStartIndex(c);
+  return i >= 0 ? c.statusHistory[i].date : (c.createdAt || todayKey());
+}
+function dateChips(inputId) {
+  var opts = [[0, "Today"], [1, "Yesterday"], [2, "2 days ago"], [3, "3 days ago"], [7, "1 week ago"]];
+  return '<div class="chips" style="margin-bottom:8px">' + opts.map(function (o) {
+    return '<button type="button" class="chip" onclick="setDateInput(\'' + inputId + '\',' + o[0] + ',this)">' + o[1] + '</button>';
+  }).join("") + '</div>';
+}
+function setDateInput(inputId, daysAgo, btn) {
+  var el = document.getElementById(inputId);
+  if (el) { el.value = addDays(todayKey(), -daysAgo); el.dispatchEvent(new Event("change")); }
+  if (btn) Array.prototype.forEach.call(btn.parentNode.querySelectorAll(".chip"), function (b) { b.classList.toggle("active", b === btn); });
+}
+function quickPayHtml(amountId, noteId) {
+  return '<div class="quick">' + QUICK_PAYMENTS.map(function (q) {
+    return '<button type="button" onclick="pickQuick(this,\'' + amountId + '\',\'' + noteId + '\',' + q[0] + ',\'' + q[1] + '\')"><b class="num">' + money(q[0]) + '</b><small>' + q[1] + '</small></button>';
+  }).join("") + '</div>';
+}
+function pickQuick(btn, amountId, noteId, amt, note) {
+  document.getElementById(amountId).value = amt;
+  var n = document.getElementById(noteId);
+  if (n) n.value = note;
+  Array.prototype.forEach.call(btn.parentNode.querySelectorAll("button"), function (b) { b.classList.toggle("on", b === btn); });
+}
+
+// ---- Add client ----
+function openAddClient() {
+  var body =
+    '<div class="field"><label for="f_name">Client name</label><input type="text" id="f_name" placeholder="Shop or person name"></div>' +
+    '<div class="field"><label for="f_email">Email or phone</label><input type="text" id="f_email" placeholder="name@shop.com or +91 98xxxxxx"></div>' +
+    '<div class="field"><label>Stage</label>' + segHtml("f_status", [["lead", "Lead"], ["trial", "Free trial"], ["active", "Paying"]], "trial") + '</div>' +
+    '<div class="field"><label for="f_since">Started on</label>' + dateChips("f_since") + '<input type="date" id="f_since" value="' + todayKey() + '"><div class="hint">The day they became a lead or started the trial.</div></div>' +
+    '<div class="field"><label>First payment (optional)</label>' + quickPayHtml("f_amount", "f_pnote") +
+    '<div class="amount-input" style="margin-top:8px"><span>' + RS + '</span><input type="number" id="f_amount" inputmode="numeric" placeholder="Leave empty if not paid yet"></div>' +
+    '<input type="hidden" id="f_pnote"><div class="hint">Adding a payment marks the client as Paying.</div></div>' +
+    '<div class="field"><label for="f_pdate">Payment date</label><input type="date" id="f_pdate" value="' + todayKey() + '"><div class="hint">Billing month 1 starts from this date.</div></div>' +
+    '<div class="err" id="f_err"></div>';
+  openModal("Add client", "New lead, trial or paying client", body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="saveNewClient()">' + icon("check") + 'Add client</button>');
+}
+function saveNewClient() {
+  var name = val("f_name");
+  if (!name) return showErr("f_err", "Client name is required.");
+  var status = segVal("f_status") || "lead";
+  var amount = Number(val("f_amount"));
+  var now = todayKey();
+  var since = val("f_since") || now;
+  var pdate = val("f_pdate") || now;
+  if (amount > 0 && pdate < since) since = pdate;
+  var c = { id: uid("c"), name: name, email: val("f_email"), status: status, payments: [], statusHistory: [{ status: status, date: since }], createdAt: since, updatedAt: now };
+  if (amount > 0) {
+    c.payments.push({ amount: amount, date: pdate, note: val("f_pnote") });
+    if (status !== "active" && pdate <= now) { c.status = "active"; c.statusHistory.push({ status: "active", date: pdate }); }
+  }
+  clients.push(c);
+  saveClient(c, name + " added");
+  closeModal();
+  refresh();
+}
+
+// ---- Edit client ----
+function openEditClient(id) {
+  var c = findClient(id); if (!c) return;
+  var body =
+    '<div class="field"><label for="f_name">Client name</label><input type="text" id="f_name" value="' + esc(c.name) + '"></div>' +
+    '<div class="field"><label for="f_email">Email or phone</label><input type="text" id="f_email" value="' + esc(c.email || "") + '"></div>' +
+    '<div class="field"><label for="f_created">Added on</label><input type="date" id="f_created" value="' + esc(c.createdAt || "") + '"></div>' +
+    (c.status === "active" ? '<div class="field"><button class="btn" type="button" style="width:100%" onclick="openPlanModal(\'' + esc(id) + '\')">' + icon("cal") + 'Billing plan: ' + esc(PLANS[detectPlan(c)].label) + '</button></div>' : '') +
+    '<div class="err" id="f_err"></div>';
+  openModal("Edit client", esc(c.name), body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="saveEditClient(\'' + esc(id) + '\')">Save</button>');
+}
+function saveEditClient(id) {
+  var c = findClient(id); if (!c) return;
+  var name = val("f_name");
+  if (!name) return showErr("f_err", "Client name is required.");
+  c.name = name;
+  c.email = val("f_email");
+  var created = val("f_created");
+  if (created) {
+    if (c.statusHistory && c.statusHistory[0] && c.statusHistory[0].date === c.createdAt) c.statusHistory[0].date = created;
+    c.createdAt = created;
+  }
+  c.updatedAt = todayKey();
+  saveClient(c, "Client updated");
+  closeModal();
+  refresh();
+}
+
+// ---- Status ----
+function openStatusModal(id, preset) {
+  var c = findClient(id); if (!c) return;
+  var cur = preset || c.status;
+  var since = c.status === "churned" && c.churnDate ? c.churnDate : stageStartDate(c);
+  var body =
+    '<div class="field"><label>Stage</label>' + segHtml("st_seg", [["lead", "Lead"], ["trial", "Trial"], ["active", "Paying"], ["churned", "Churned"]], cur) + '</div>' +
+    '<div class="field"><label for="st_date" id="st_date_label">' + (cur === c.status ? "Stage started on" : "Date") + '</label>' + dateChips("st_date") +
+    '<input type="date" id="st_date" data-cur="' + esc(c.status) + '" data-since="' + esc(since) + '" value="' + esc(cur === c.status ? since : todayKey()) + '">' +
+    '<div class="hint" id="st_hint">' + (cur === c.status ? "Keep the same stage and change this date to fix when it started." : "") + '</div></div>' +
+    '<div class="field" id="st_reason_wrap"><label for="st_reason">Why did they leave?</label><select id="st_reason">' +
+    CHURN_REASONS.map(function (r) { return '<option value="' + r + '"' + (c.churnReason === r ? " selected" : "") + '>' + r + '</option>'; }).join("") + '</select></div>';
+  openModal("Change stage", esc(c.name) + " is currently " + (STATUS[c.status] || STATUS.lead).label, body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="saveStatus(\'' + esc(id) + '\')">Update</button>');
+  toggleChurnReason();
+}
+function toggleChurnReason() {
+  var w = document.getElementById("st_reason_wrap");
+  if (w) w.style.display = segVal("st_seg") === "churned" ? "block" : "none";
+}
+function onStageSegChange() {
+  var d = document.getElementById("st_date"); if (!d) return;
+  var same = segVal("st_seg") === d.getAttribute("data-cur");
+  d.value = same ? d.getAttribute("data-since") : todayKey();
+  document.getElementById("st_date_label").textContent = same ? "Stage started on" : "Date";
+  document.getElementById("st_hint").textContent = same ? "Keep the same stage and change this date to fix when it started." : "";
+}
+function saveStatus(id) {
+  var c = findClient(id); if (!c) return;
+  var s = segVal("st_seg");
+  var date = val("st_date") || todayKey();
+  if (s === c.status) {
+    // Same stage: fix the date this stage started
+    c.statusHistory = c.statusHistory || [];
+    var i = stageStartIndex(c);
+    if (i >= 0) c.statusHistory[i].date = date;
+    else c.statusHistory.push({ status: s, date: date });
+    if (s === "churned") { c.churnDate = date; c.churnReason = val("st_reason") || c.churnReason; }
+    if (date < (c.createdAt || date)) c.createdAt = date;
+    c.updatedAt = todayKey();
+    saveClient(c, STATUS[s].label + " start date set to " + fmtDate(date));
+    closeModal();
+    refresh();
+    return;
+  }
+  if (date < (c.createdAt || date)) c.createdAt = date;
+  c.status = s;
+  if (s === "churned") { c.churnReason = val("st_reason"); c.churnDate = date; }
+  else { c.churnReason = null; c.churnDate = null; }
+  c.statusHistory = c.statusHistory || [];
+  c.statusHistory.push({ status: s, date: date });
+  c.updatedAt = todayKey();
+  saveClient(c, c.name + " moved to " + STATUS[s].label);
+  closeModal();
+  refresh();
+}
+
+// ---- Payment ----
+function suggestPayment(c) {
+  var b = billing(c);
+  if (!b.anchor) {
+    var pl = detectPlan(c);
+    var up = planUpfront(pl, c.meta || {});
+    return up > 0 ? { amount: up, note: pl === "lockin" ? "Upfront + 3-month lock-in" : pl === "old" ? "Old offer charge" : "Base charge", why: "First payment for the " + PLANS[pl].label + " plan" } : null;
+  }
+  if (c.status !== "active") return null;
+  if (b.planOutstanding > 0) return { amount: b.planOutstanding, note: b.planOverdueName, why: b.overdueK === 0 ? "Upfront payment pending" : "Month " + b.overdueK + " charge pending" };
+  if (b.msDue > 0) { var m0 = b.msPending[0]; return { amount: Number(m0.amount) || 0, note: m0.label + " milestone", why: m0.label + " milestone hit on " + fmtShort(m0.hitDate) + ", payment pending" }; }
+  if (b.nextAmount > 0 && b.daysLeft <= 7) return { amount: b.nextAmount, note: b.nextName, why: "Due on " + fmtShort(b.nextDate) + " (" + plural(b.daysLeft, "day") + " left)" };
+  return null;
+}
+function openPaymentModal(id) {
+  var c = findClient(id); if (!c) return;
+  var sug = suggestPayment(c);
+  var body =
+    (sug ? '<div class="note-box">' + icon("spark") + ' Suggested: ' + money(sug.amount) + ' &middot; ' + esc(sug.why) + '</div>' : '') +
+    '<div class="field"><label>Quick pick</label>' + quickPayHtml("p_amount", "p_note") + '</div>' +
+    '<div class="field"><label for="p_amount">Amount</label><div class="amount-input"><span>' + RS + '</span><input type="number" id="p_amount" inputmode="numeric" placeholder="999" value="' + (sug ? sug.amount : "") + '"></div></div>' +
+    '<div class="field"><label for="p_date">Payment date</label>' + dateChips("p_date") + '<input type="date" id="p_date" value="' + todayKey() + '"><div class="hint">Pick the day the money actually came. Older dates are fine. A future date shows it as expected.</div></div>' +
+    '<div class="field"><label for="p_note">Note</label><input type="text" id="p_note" placeholder="e.g. Month 2 base charge" value="' + (sug ? esc(sug.note) : "") + '"></div>' +
+    '<div class="err" id="p_err"></div>';
+  openModal("Log payment", esc(c.name) + " &middot; " + money(info(c).revenue) + " paid so far", body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="savePayment(\'' + esc(id) + '\')">' + icon("check") + 'Save payment</button>');
+}
+function savePayment(id) {
+  var c = findClient(id); if (!c) return;
+  var amount = Number(val("p_amount"));
+  var date = val("p_date");
+  if (!amount || amount <= 0) return showErr("p_err", "Enter a valid amount.");
+  if (!date) return showErr("p_err", "Pick a date.");
+  c.payments = c.payments || [];
+  var newPay = { amount: amount, date: date, note: val("p_note") };
+  c.payments.push(newPay);
+  linkMilestonePayment(c, newPay);
+  if (date < (c.createdAt || date)) c.createdAt = date;
+  if ((c.status === "trial" || c.status === "lead") && date <= todayKey()) {
+    c.status = "active";
+    c.statusHistory = c.statusHistory || [];
+    c.statusHistory.push({ status: "active", date: date });
+  }
+  c.updatedAt = todayKey();
+  saveClient(c, money(amount) + " logged for " + c.name);
+  closeModal();
+  refresh();
+}
+
+// ---- Billing plan ----
+function openPlanModal(id) {
+  var c = findClient(id); if (!c) return;
+  var meta = c.meta || {};
+  var plan = detectPlan(c);
+  var b = billing(c);
+  var locked = metaSupported === false;
+  var body = (locked
+      ? '<div class="note-box" style="display:block">Plan is detected automatically right now. To save a custom plan or start date, run this once in Supabase (SQL Editor) and refresh:<div class="sql-box" style="margin-top:8px">' + esc(META_SQL) + '</div></div>'
+      : '') +
+    '<div class="field"><label>Plan</label>' + segHtml("pl_seg", [["standard", "Standard"], ["lockin", "3-month lock-in"], ["old", "Old offer"], ["custom", "Custom"]], plan) +
+    '<div class="hint" id="pl_desc">' + esc(PLANS[plan].desc) + '</div></div>' +
+    '<div class="field" id="pl_up_wrap"><label for="pl_upfront">Old offer upfront</label>' +
+    '<div class="chips" style="display:flex;gap:6px;margin-bottom:6px"><button class="btn sm" type="button" onclick="document.getElementById(\'pl_upfront\').value=499">Rs 499</button><button class="btn sm" type="button" onclick="document.getElementById(\'pl_upfront\').value=999">Rs 999</button></div>' +
+    '<div class="amount-input"><span>' + RS + '</span><input type="number" id="pl_upfront" inputmode="numeric" value="' + esc(meta.upfront != null ? meta.upfront : (plan === "old" ? 499 : "")) + '" placeholder="499"></div><div class="hint">One-time amount the client paid at the start. After this, only milestones are charged.</div></div>' +
+    '<div class="field" id="pl_amt_wrap"><label for="pl_amount" id="pl_amt_label">Monthly amount</label><div class="amount-input"><span>' + RS + '</span><input type="number" id="pl_amount" inputmode="numeric" value="' + esc(meta.amount || "") + '" placeholder="e.g. 2999"></div></div>' +
+    '<div class="field"><label for="pl_start">Billing start date</label><input type="date" id="pl_start" value="' + esc(b.anchor || todayKey()) + '"><div class="hint">Month 1 starts on this date. Default is the first payment date.</div></div>' +
+    '<div class="err" id="pl_err"></div>';
+  openModal("Billing plan", esc(c.name), body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" ' + (locked ? "disabled" : "") + ' onclick="savePlan(\'' + esc(id) + '\')">Save plan</button>');
+  togglePlanFields();
+}
+function togglePlanFields() {
+  var v = segVal("pl_seg");
+  var w = document.getElementById("pl_amt_wrap");
+  if (w) w.style.display = (v === "custom" || v === "old") ? "block" : "none";
+  var u = document.getElementById("pl_up_wrap");
+  if (u) u.style.display = v === "old" ? "block" : "none";
+  var lb = document.getElementById("pl_amt_label");
+  if (lb) lb.textContent = v === "old" ? "Monthly base (leave empty or 0 if milestones only)" : "Monthly amount";
+  var d = document.getElementById("pl_desc");
+  if (d && PLANS[v]) d.textContent = PLANS[v].desc;
+}
+function savePlan(id) {
+  var c = findClient(id); if (!c) return;
+  var plan = segVal("pl_seg");
+  var amount = Number(val("pl_amount"));
+  if (plan === "custom" && !(amount > 0)) return showErr("pl_err", "Enter the monthly amount.");
+  var upfront = Number(val("pl_upfront"));
+  if (plan === "old" && !(upfront > 0)) return showErr("pl_err", "Enter the old offer upfront amount (499 or 999).");
+  var start = val("pl_start");
+  if (!start) return showErr("pl_err", "Pick a billing start date.");
+  c.meta = Object.assign({}, c.meta || {}, { plan: plan, amount: plan === "custom" ? amount : plan === "old" ? (amount > 0 ? amount : 0) : null, upfront: plan === "old" ? upfront : null, billingStart: start });
+  c.updatedAt = todayKey();
+  saveClient(c, "Plan saved for " + c.name);
+  closeModal();
+  refresh();
+}
+
+// ---- Edit payment ----
+function openEditPayment(id, idx) {
+  var c = findClient(id); if (!c || !c.payments || !c.payments[idx]) return;
+  var p = c.payments[idx];
+  var isRefund = (Number(p.amount) || 0) < 0;
+  var body =
+    '<div class="field"><label for="e_amount">' + (isRefund ? "Refund amount" : "Amount") + '</label><div class="amount-input"><span>' + RS + '</span><input type="number" id="e_amount" inputmode="numeric" value="' + Math.abs(Number(p.amount) || 0) + '"></div></div>' +
+    '<div class="field"><label for="e_date">Date</label>' + dateChips("e_date") + '<input type="date" id="e_date" value="' + esc(p.date || todayKey()) + '"></div>' +
+    '<div class="field"><label for="e_note">Note</label><input type="text" id="e_note" value="' + esc(p.note || "") + '"></div>' +
+    '<div class="err" id="e_err"></div>';
+  openModal(isRefund ? "Edit refund" : "Edit payment", esc(c.name), body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="saveEditPayment(\'' + esc(id) + '\',' + idx + ')">' + icon("check") + 'Save</button>');
+}
+function saveEditPayment(id, idx) {
+  var c = findClient(id); if (!c || !c.payments || !c.payments[idx]) return;
+  var p = c.payments[idx];
+  var isRefund = (Number(p.amount) || 0) < 0;
+  var amount = Number(val("e_amount"));
+  var date = val("e_date");
+  if (!amount || amount <= 0) return showErr("e_err", "Enter a valid amount.");
+  if (!date) return showErr("e_err", "Pick a date.");
+  c.payments[idx] = Object.assign({}, p, { amount: isRefund ? -Math.abs(amount) : amount, date: date, note: val("e_note") });
+  if (p.msId) {
+    var lm = msList(c).find(function (m) { return m.id === p.msId; });
+    if (lm) { lm.paidDate = date; lm.paidAmount = amount; }
+  } else if (!isRefund) linkMilestonePayment(c, c.payments[idx]);
+  if (date < (c.createdAt || date)) c.createdAt = date;
+  c.updatedAt = todayKey();
+  saveClient(c, (isRefund ? "Refund" : "Payment") + " updated");
+  closeModal();
+  refresh();
+}
+
+// ---- Refund ----
+function openRefundModal(id) {
+  var c = findClient(id); if (!c) return;
+  var body =
+    '<div class="field"><label for="r_amount">Refund amount</label><div class="amount-input"><span>' + RS + '</span><input type="number" id="r_amount" inputmode="numeric" placeholder="999"></div></div>' +
+    '<div class="field"><label for="r_date">Date</label>' + dateChips("r_date") + '<input type="date" id="r_date" value="' + todayKey() + '"></div>' +
+    '<div class="field"><label for="r_reason">Reason</label><select id="r_reason">' + REFUND_REASONS.map(function (r) { return '<option>' + r + '</option>'; }).join("") + '</select></div>' +
+    '<div class="field"><label for="r_note">Note (optional)</label><input type="text" id="r_note" placeholder="Extra detail"></div>' +
+    '<div class="err" id="r_err"></div>';
+  openModal("Issue refund", esc(c.name) + " &middot; " + money(info(c).revenue) + " paid so far", body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn danger-fill" type="button" onclick="saveRefund(\'' + esc(id) + '\')">Save refund</button>');
+}
+function saveRefund(id) {
+  var c = findClient(id); if (!c) return;
+  var amount = Number(val("r_amount"));
+  var date = val("r_date");
+  if (!amount || amount <= 0) return showErr("r_err", "Enter a valid amount.");
+  if (!date) return showErr("r_err", "Pick a date.");
+  var note = val("r_note");
+  c.payments = c.payments || [];
+  c.payments.push({ amount: -Math.abs(amount), date: date, note: "Refund - " + val("r_reason") + (note ? " - " + note : "") });
+  c.updatedAt = todayKey();
+  saveClient(c, "Refund of " + money(amount) + " saved");
+  closeModal();
+  refresh();
+}
+
+// ---- Deletes ----
+function confirmDeletePayment(id, idx) {
+  var c = findClient(id); if (!c || !c.payments || !c.payments[idx]) return;
+  var p = c.payments[idx];
+  var body = '<p style="margin:0 0 14px;color:var(--ink-2)">This removes <b>' + money(p.amount) + '</b> from ' + fmtDate(p.date) + '. It cannot be undone.</p>' +
+    '<div class="field"><label for="del_confirm">Type DELETE to confirm</label><input type="text" id="del_confirm" placeholder="DELETE" autocomplete="off"></div><div class="err" id="del_err"></div>';
+  openModal("Delete payment?", esc(c.name), body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn danger-fill" type="button" onclick="doDeletePayment(\'' + esc(id) + '\',' + idx + ')">Delete</button>');
+}
+function doDeletePayment(id, idx) {
+  if (val("del_confirm") !== "DELETE") return showErr("del_err", "Type DELETE exactly to confirm.");
+  var c = findClient(id); if (!c) return;
+  var gone = c.payments[idx];
+  if (gone && gone.msId) {
+    var um = msList(c).find(function (m) { return m.id === gone.msId; });
+    if (um) { um.paidDate = null; um.paidAmount = null; }
+  }
+  c.payments.splice(idx, 1);
+  c.updatedAt = todayKey();
+  saveClient(c, "Payment deleted");
+  closeModal();
+  refresh();
+}
+function confirmDeleteClient(id) {
+  var c = findClient(id); if (!c) return;
+  var body = '<p style="margin:0 0 14px;color:var(--ink-2)">This permanently deletes <b>' + esc(c.name) + '</b> and all ' + plural((c.payments || []).length, "payment") + '. If they just left, mark them as Churned instead so your numbers stay correct.</p>' +
+    '<div class="field"><label for="del_confirm">Type DELETE to confirm</label><input type="text" id="del_confirm" placeholder="DELETE" autocomplete="off"></div><div class="err" id="del_err"></div>';
+  openModal("Delete client?", "", body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn danger-fill" type="button" onclick="doDeleteClient(\'' + esc(id) + '\')">Delete forever</button>');
+}
+function doDeleteClient(id) {
+  if (val("del_confirm") !== "DELETE") return showErr("del_err", "Type DELETE exactly to confirm.");
+  var c = findClient(id);
+  clients = clients.filter(function (x) { return x.id !== id; });
+  removeClient(id, (c ? c.name : "Client") + " deleted");
+  closeModal();
+  closeClient();
+  refresh();
+}
+
+// ---- Expense ----
+function openExpenseModal() {
+  var body =
+    '<div class="field"><label for="x_amount">Amount</label><div class="amount-input"><span>' + RS + '</span><input type="number" id="x_amount" inputmode="numeric" placeholder="500"></div></div>' +
+    '<div class="field"><label>Category</label><div class="chips" id="x_src" data-value="Ads">' + EXPENSE_SOURCES.map(function (s, i) {
+      return '<button type="button" class="chip' + (i === 0 ? " active" : "") + '" onclick="pickChip(\'x_src\',this,\'' + s + '\')">' + s + '</button>';
+    }).join("") + '</div></div>' +
+    '<div class="field"><label for="x_date">Date</label>' + dateChips("x_date") + '<input type="date" id="x_date" value="' + todayKey() + '"></div>' +
+    '<div class="field"><label for="x_note">Note</label><input type="text" id="x_note" placeholder="e.g. Meta ads for leads"></div>' +
+    '<div class="err" id="x_err"></div>';
+  openModal("Add expense", "Ads, tools, team or anything you spent on the business", body,
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn primary" type="button" onclick="saveExpenseEntry()">' + icon("check") + 'Save expense</button>');
+}
+function pickChip(id, btn, v) {
+  var w = document.getElementById(id);
+  w.dataset.value = v;
+  Array.prototype.forEach.call(w.querySelectorAll(".chip"), function (b) { b.classList.toggle("active", b === btn); });
+}
+function saveExpenseEntry() {
+  var amount = Number(val("x_amount"));
+  var date = val("x_date");
+  if (!amount || amount <= 0) return showErr("x_err", "Enter a valid amount.");
+  if (!date) return showErr("x_err", "Pick a date.");
+  var t = { id: uid("t"), amount: amount, source: document.getElementById("x_src").dataset.value || "Other", date: date, note: val("x_note") };
+  expenses.push(t);
+  saveExpense(t, "Expense of " + money(amount) + " saved");
+  closeModal();
+  refresh();
+}
+function confirmDeleteExpense(id) {
+  var t = expenses.find(function (x) { return x.id === id; }); if (!t) return;
+  openModal("Delete expense?", "", '<p style="margin:0;color:var(--ink-2)">Delete <b>' + money(t.amount) + '</b> (' + esc(t.source) + ') from ' + fmtDate(t.date) + '?</p>',
+    '<button class="btn" type="button" onclick="closeModal()">Cancel</button><button class="btn danger-fill" type="button" onclick="doDeleteExpense(\'' + esc(id) + '\')">Delete</button>');
+}
+function doDeleteExpense(id) {
+  expenses = expenses.filter(function (x) { return x.id !== id; });
+  removeExpense(id, "Expense deleted");
+  closeModal();
+  refresh();
+}
+
+// ================= Money =================
+var RANGES = [["7", "7 days"], ["30", "30 days"], ["90", "90 days"], ["month", "This month"], ["year", "This year"], ["all", "All time"]];
+function rangeBounds(r) {
+  var today = todayKey();
+  if (r === "month") return { from: monthKey(today) + "-01", to: today };
+  if (r === "year") return { from: today.slice(0, 4) + "-01-01", to: today };
+  if (r === "all") {
+    var keys = incomeEntries().map(function (e) { return e.date; }).concat(expenses.map(function (e) { return e.date; })).filter(Boolean).sort();
+    return { from: keys.length ? keys[0] : today, to: keys.length && keys[keys.length - 1] > today ? keys[keys.length - 1] : today };
+  }
+  return { from: addDays(today, -(Number(r) - 1)), to: today };
+}
+function bucketMode(from, to) {
+  var span = daysBetween(from, to) + 1;
+  return span <= 45 ? "day" : span <= 180 ? "week" : "month";
+}
+function bucketKey(key, mode) {
+  if (mode === "day") return key;
+  if (mode === "month") return monthKey(key);
+  var d = parseKey(key);
+  var dow = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - dow);
+  return dateKey(d);
+}
+function bucketLabel(k, mode) {
+  if (mode === "month") return monthLabel(k);
+  return fmtShort(k);
+}
+function buildBuckets(from, to, mode) {
+  var keys = [], seen = {};
+  var cur = parseKey(from), end = parseKey(to);
+  while (cur <= end) {
+    var k = bucketKey(dateKey(cur), mode);
+    if (!seen[k]) { seen[k] = 1; keys.push(k); }
+    cur.setDate(cur.getDate() + 1);
+  }
+  return keys;
+}
+function renderMoney() {
+  var b = rangeBounds(ui.moneyRange);
+  var inc = incomeEntries();
+  var income = sumInRange(inc, b.from, b.to);
+  var expense = sumInRange(expenses, b.from, b.to);
+  var net = income - expense;
+  var margin = income > 0 ? Math.round((net / income) * 100) : 0;
+  var refunds = 0;
+  inc.forEach(function (e) { if (e.amount < 0 && e.date >= b.from && e.date <= b.to) refunds += -e.amount; });
+  var lifeIncome = 0, lifeExpense = 0;
+  inc.forEach(function (e) { lifeIncome += e.amount; });
+  expenses.forEach(function (e) { lifeExpense += e.amount; });
+
+  var html = '<div class="page-head"><div><h1 class="page-title">Money</h1><p class="page-sub">Lifetime profit ' + money(lifeIncome - lifeExpense) + ' &middot; income comes from client payments automatically</p></div>' +
+    '<div style="display:flex;gap:8px"><button class="btn" type="button" onclick="exportMoneyCSV()">' + icon("download") + '<span class="hide-m">Export</span></button><button class="btn primary hide-m" type="button" onclick="openExpenseModal()">' + icon("plus") + 'Add expense</button></div></div>';
+
+  html += '<div class="chips" style="margin-bottom:16px">' + RANGES.map(function (r) {
+    return '<button class="chip' + (ui.moneyRange === r[0] ? " active" : "") + '" type="button" onclick="ui.moneyRange=\'' + r[0] + '\';renderMoney()">' + r[1] + '</button>';
+  }).join("") + '</div>';
+
+  html += '<div class="grid g-4">';
+  html += '<div class="card kpi hero"><div class="k-label">' + icon("spark") + 'Net profit</div><div class="k-val num">' + money(net) + '</div><div class="k-foot">' + (income > 0 ? '<span class="delta ' + (margin >= 0 ? "up" : "down") + '">' + margin + '%</span> profit margin' : 'No income in this period') + '</div></div>';
+  html += kpiCard("Income", '<span class="t-good">' + money(income) + '</span>', refunds ? '<span class="t-bad">' + money(refunds) + ' refunded</span>' : 'After refunds', "arrowDown");
+  html += kpiCard("Expenses", '<span class="t-bad">' + money(expense) + '</span>', income > 0 ? pct(expense, income) + "% of income" : "&nbsp;", "arrowUp");
+  html += kpiCard("Lifetime", money(lifeIncome), "Income vs " + money(lifeExpense) + " spent", "wallet");
+  html += '</div>';
+
+  html += '<div class="grid g-2 section">';
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">Income vs expenses</h2><div class="legend"><span><i style="background:var(--brand)"></i>Income</span><span><i style="background:var(--bad)"></i>Expense</span></div></div><div class="chart-box"><canvas id="chFlow"></canvas></div></div>';
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">Profit growth</h2><span class="card-note">Running total, all time</span></div><div class="chart-box"><canvas id="chProfit"></canvas></div></div>';
+  html += '</div>';
+
+  // Breakdown cards
+  var bySrc = {};
+  expenses.forEach(function (e) { if (e.date >= b.from && e.date <= b.to) bySrc[e.source || "Other"] = (bySrc[e.source || "Other"] || 0) + e.amount; });
+  var srcList = Object.keys(bySrc).map(function (k) { return [k, bySrc[k]]; }).sort(function (a, c) { return c[1] - a[1]; });
+  var byClient = {};
+  inc.forEach(function (e) { if (e.date >= b.from && e.date <= b.to) byClient[e.source] = (byClient[e.source] || 0) + e.amount; });
+  var cliList = Object.keys(byClient).map(function (k) { return [k, byClient[k]]; }).filter(function (x) { return x[1] > 0; }).sort(function (a, c) { return c[1] - a[1]; }).slice(0, 6);
+
+  html += '<div class="grid g-2 section">';
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">Where money comes from</h2><span class="card-note">Top clients in period</span></div>' + barsHtml(cliList, "var(--brand)", "No income in this period.") + '</div>';
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">Where money goes</h2><span class="card-note">Expenses by category</span></div>' + barsHtml(srcList, "var(--bad)", "No expenses in this period.") + '</div>';
+  html += '</div>';
+
+  // Transactions
+  var rows = inc.map(function (e) { return { kind: e.amount < 0 ? "refund" : "income", amount: e.amount, date: e.date, title: e.source, note: e.note, clientId: e.clientId }; })
+    .concat(expenses.map(function (e) { return { kind: "expense", amount: e.amount, date: e.date, title: e.source, note: e.note, id: e.id }; }))
+    .filter(function (r) { return r.date >= b.from && r.date <= b.to; })
+    .filter(function (r) { return ui.txFilter === "all" || (ui.txFilter === "income" ? r.kind !== "expense" : r.kind === "expense"); })
+    .sort(function (a, c) { return String(c.date).localeCompare(String(a.date)); });
+
+  html += '<div class="card section"><div class="card-head"><h2 class="card-title">' + icon("receipt") + 'Transactions</h2><div class="chips">' +
+    [["all", "All"], ["income", "Income"], ["expense", "Expenses"]].map(function (f) {
+      return '<button class="chip' + (ui.txFilter === f[0] ? " active" : "") + '" type="button" onclick="ui.txFilter=\'' + f[0] + '\';renderMoney()">' + f[1] + '</button>';
+    }).join("") + '</div></div>';
+  if (rows.length === 0) html += '<div class="empty-state"><div class="e-ic">' + icon("receipt") + '</div><b>No transactions</b>Nothing in this period yet.</div>';
+  else {
+    html += '<table class="tbl stack"><thead><tr><th>Entry</th><th>Date</th><th>Note</th><th class="right">Amount</th><th></th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        var dot = r.kind === "expense" ? '<span class="tx-dot out">' + icon("arrowUp") + '</span>' : r.kind === "refund" ? '<span class="tx-dot ref">' + icon("refund") + '</span>' : '<span class="tx-dot in">' + icon("arrowDown") + '</span>';
+        var click = r.clientId ? ' style="cursor:pointer" onclick="openClient(\'' + esc(r.clientId) + '\')"' : '';
+        var amtCls = r.kind === "expense" || r.kind === "refund" ? "tx-out" : "tx-in";
+        var amtTxt = r.kind === "expense" ? "-" + money(r.amount) : r.kind === "refund" ? money(r.amount) : "+" + money(r.amount);
+        var del = r.id ? '<button class="btn sm icon" type="button" onclick="confirmDeleteExpense(\'' + esc(r.id) + '\')" aria-label="Delete">' + icon("trash") + '</button>' : '';
+        return '<tr><td class="grow"><span class="tx-type"' + click + '>' + dot + esc(r.title) + '</span></td><td class="t-muted">' + fmtShort(r.date) + '</td>' +
+          '<td class="m-full">' + (r.note ? esc(r.note) : '<span class="t-muted">-</span>') + '</td><td class="right ' + amtCls + ' num">' + amtTxt + '</td><td class="right" style="width:44px">' + del + '</td></tr>';
+      }).join("") + '</tbody></table>';
+  }
+  html += '</div>';
+
+  document.getElementById("view-money").innerHTML = html;
+  drawFlowChart(b);
+  drawProfitChart(b);
+}
+function barsHtml(list, color, emptyTxt) {
+  if (!list.length) return '<div class="card-note">' + emptyTxt + '</div>';
+  var max = list[0][1] || 1;
+  var total = list.reduce(function (s, x) { return s + x[1]; }, 0);
+  return '<div class="bars">' + list.map(function (x) {
+    return '<div class="bar-row"><div class="br-top"><span class="br-name">' + esc(x[0]) + '</span><span class="br-val num">' + money(x[1]) + ' <span class="t-muted" style="font-weight:500">' + pct(x[1], total) + '%</span></span></div><div class="bar-track"><div class="bar-fill" style="width:' + (x[1] / max * 100) + '%;background:' + color + '"></div></div></div>';
+  }).join("") + '</div>';
+}
+
+// ================= Churn =================
+function renderChurn() {
+  var churned = clients.filter(function (c) { return c.status === "churned"; }).map(function (c) { return { c: c, inf: info(c) }; });
+  var revenue = 0, days = 0;
+  var reasons = {};
+  churned.forEach(function (x) {
+    revenue += x.inf.revenue;
+    days += Math.max(0, daysBetween(x.inf.firstTrial, x.c.churnDate || x.c.updatedAt));
+    var r = x.c.churnReason || "Not specified";
+    reasons[r] = (reasons[r] || 0) + 1;
+  });
+  var avgDays = churned.length ? Math.round(days / churned.length) : 0;
+  var reasonList = Object.keys(reasons).map(function (k) { return [k, reasons[k]]; }).sort(function (a, b) { return b[1] - a[1]; });
+  var active = clients.filter(function (c) { return c.status === "active"; }).length;
+  var rate = pct(churned.length, active + churned.length);
+  var paidBefore = churned.filter(function (x) { return x.inf.paidCount > 0; }).length;
+
+  var html = '<div class="page-head"><div><h1 class="page-title">Churn</h1><p class="page-sub">Who left, when, and why. Use this to fix the service and win clients back.</p></div></div>';
+  html += '<div class="grid g-4">';
+  html += '<div class="card kpi hero"><div class="k-label">' + icon("down") + 'Churn rate</div><div class="k-val num">' + rate + '%</div><div class="k-foot">' + churned.length + ' left vs ' + active + ' still paying</div></div>';
+  html += kpiCard("Revenue before leaving", money(revenue), paidBefore + " of " + churned.length + " paid at least once", "rupee");
+  html += kpiCard("Avg time before leaving", plural(avgDays, "day"), "From trial start to churn", "clock");
+  html += kpiCard("Top reason", reasonList.length ? esc(reasonList[0][0]) : "-", reasonList.length ? plural(reasonList[0][1], "client") : "No churn yet", "alert");
+  html += '</div>';
+
+  html += '<div class="grid g-main section">';
+  html += '<div class="card"><div class="card-head"><h2 class="card-title">' + icon("users") + 'Churned clients</h2><span class="card-note">' + plural(churned.length, "client") + '</span></div>';
+  if (!churned.length) {
+    html += '<div class="empty-state"><div class="e-ic">' + icon("check") + '</div><b>Nobody has left</b>Keep delivering results.</div>';
+  } else {
+    churned.sort(function (a, b) { return String(b.c.churnDate || "").localeCompare(String(a.c.churnDate || "")); });
+    html += '<table class="tbl stack"><thead><tr><th>Client</th><th>Stayed</th><th>Paid</th><th>Reason</th><th></th></tr></thead><tbody>' + churned.map(function (x) {
+      var d = Math.max(0, daysBetween(x.inf.firstTrial, x.c.churnDate || x.c.updatedAt));
+      return '<tr><td class="grow"><div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="openClient(\'' + esc(x.c.id) + '\')"><div class="avatar" style="width:32px;height:32px;border-radius:9px;font-size:12px;background:' + avatarColor(x.c.id) + '">' + esc(initials(x.c.name)) + '</div><div><div style="font-weight:700">' + esc(x.c.name) + '</div><div class="t-muted" style="font-size:12px">Left ' + fmtDate(x.c.churnDate || x.c.updatedAt) + '</div></div></div></td>' +
+        '<td class="num">' + plural(d, "day") + '</td><td class="num" style="font-weight:700">' + money(x.inf.revenue) + '</td>' +
+        '<td><span class="pill s-churned">' + esc(x.c.churnReason || "Not specified") + '</span></td>' +
+        '<td class="right"><button class="btn sm" type="button" onclick="openStatusModal(\'' + esc(x.c.id) + '\',\'trial\')">' + icon("swap") + 'Win back</button></td></tr>';
+    }).join("") + '</tbody></table>';
+  }
+  html += '</div>';
+  html += '<div class="card" style="align-self:start"><div class="card-head"><h2 class="card-title">' + icon("alert") + 'Why they leave</h2></div>' + barsCount(reasonList) + '</div>';
+  html += '</div>';
+  document.getElementById("view-churn").innerHTML = html;
+}
+function barsCount(list) {
+  if (!list.length) return '<div class="card-note">No churn reasons yet.</div>';
+  var total = list.reduce(function (s, x) { return s + x[1]; }, 0);
+  var max = list[0][1];
+  return '<div class="bars">' + list.map(function (x) {
+    return '<div class="bar-row"><div class="br-top"><span class="br-name">' + esc(x[0]) + '</span><span class="br-val num">' + x[1] + ' <span class="t-muted" style="font-weight:500">' + pct(x[1], total) + '%</span></span></div><div class="bar-track"><div class="bar-fill" style="width:' + (x[1] / max * 100) + '%;background:var(--bad)"></div></div></div>';
+  }).join("") + '</div>';
+}
+
+// ================= Charts =================
+function killChart(k) { if (charts[k]) { charts[k].destroy(); charts[k] = null; } }
+function chartBase() {
+  var ink2 = cssVar("--ink-2", "#4b5058"), line = cssVar("--line", "rgba(0,0,0,0.08)");
+  return {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: "#1c1f23", padding: 10, cornerRadius: 10, titleFont: { weight: "700" },
+        callbacks: { label: function (it) { return " " + it.dataset.label + ": " + money(it.parsed.y); } }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: ink2, font: { family: "'Plus Jakarta Sans', sans-serif", weight: "600", size: 11 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 } },
+      y: { beginAtZero: true, grid: { color: line }, border: { display: false }, ticks: { color: ink2, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 }, callback: function (v) { return moneyShort(v); }, maxTicksLimit: 6 } }
+    }
+  };
+}
+function drawMonthlyChart() {
+  killChart("overview");
+  var el = document.getElementById("chOverview");
+  if (!el || !window.Chart) return;
+  var today = todayKey();
+  var months = [];
+  var d = parseKey(monthKey(today) + "-01");
+  for (var i = 5; i >= 0; i--) {
+    var m = new Date(d.getFullYear(), d.getMonth() - i, 1);
+    months.push(dateKey(m).slice(0, 7));
+  }
+  var inc = {}, exp = {};
+  incomeEntries().forEach(function (e) { var k = monthKey(e.date); inc[k] = (inc[k] || 0) + e.amount; });
+  expenses.forEach(function (e) { var k = monthKey(e.date); exp[k] = (exp[k] || 0) + e.amount; });
+  var brand = cssVar("--brand", "#19a463"), bad = cssVar("--bad", "#d64545"), ink = cssVar("--ink", "#1c1f23");
+  charts.overview = new Chart(el, {
+    type: "bar",
+    data: {
+      labels: months.map(monthLabel),
+      datasets: [
+        { type: "line", label: "Profit", data: months.map(function (k) { return (inc[k] || 0) - (exp[k] || 0); }), borderColor: ink, backgroundColor: ink, borderWidth: 2.5, pointRadius: 4, pointHoverRadius: 6, tension: 0.35, order: 0 },
+        { label: "Revenue", data: months.map(function (k) { return inc[k] || 0; }), backgroundColor: brand, borderRadius: 8, maxBarThickness: 34, order: 1 },
+        { label: "Expenses", data: months.map(function (k) { return exp[k] || 0; }), backgroundColor: bad, borderRadius: 8, maxBarThickness: 34, order: 2 }
+      ]
+    },
+    options: chartBase()
+  });
+}
+function drawFlowChart(b) {
+  killChart("flow");
+  var el = document.getElementById("chFlow");
+  if (!el || !window.Chart) return;
+  var mode = bucketMode(b.from, b.to);
+  var keys = buildBuckets(b.from, b.to, mode);
+  var inc = {}, exp = {};
+  incomeEntries().forEach(function (e) { if (e.date >= b.from && e.date <= b.to) { var k = bucketKey(e.date, mode); inc[k] = (inc[k] || 0) + e.amount; } });
+  expenses.forEach(function (e) { if (e.date >= b.from && e.date <= b.to) { var k = bucketKey(e.date, mode); exp[k] = (exp[k] || 0) + e.amount; } });
+  charts.flow = new Chart(el, {
+    type: "bar",
+    data: {
+      labels: keys.map(function (k) { return (mode === "week" ? "Wk " : "") + bucketLabel(k, mode); }),
+      datasets: [
+        { label: "Income", data: keys.map(function (k) { return inc[k] || 0; }), backgroundColor: cssVar("--brand", "#19a463"), borderRadius: 6, maxBarThickness: 26 },
+        { label: "Expense", data: keys.map(function (k) { return exp[k] || 0; }), backgroundColor: cssVar("--bad", "#d64545"), borderRadius: 6, maxBarThickness: 26 }
+      ]
+    },
+    options: chartBase()
+  });
+}
+function drawProfitChart(b) {
+  killChart("profit");
+  var el = document.getElementById("chProfit");
+  if (!el || !window.Chart) return;
+  var mode = bucketMode(b.from, b.to);
+  var keys = buildBuckets(b.from, b.to, mode);
+  var all = incomeEntries().map(function (e) { return { d: e.date, v: e.amount }; })
+    .concat(expenses.map(function (e) { return { d: e.date, v: -e.amount }; }))
+    .filter(function (x) { return x.d; })
+    .sort(function (a, c) { return String(a.d).localeCompare(String(c.d)); });
+  var running = 0, idx = 0, vals = [];
+  keys.forEach(function (k, i) {
+    var endKey = i < keys.length - 1 ? addDays(mode === "month" ? keys[i + 1] + "-01" : keys[i + 1], -1) : b.to;
+    while (idx < all.length && all[idx].d <= endKey) { running += all[idx].v; idx++; }
+    vals.push(running);
+  });
+  var brand = cssVar("--brand", "#19a463");
+  var ctx = el.getContext("2d");
+  var grad = ctx.createLinearGradient(0, 0, 0, el.clientHeight || 260);
+  grad.addColorStop(0, "rgba(25,164,99,0.28)");
+  grad.addColorStop(1, "rgba(25,164,99,0)");
+  var opts = chartBase();
+  opts.scales.y.beginAtZero = false;
+  opts.plugins.tooltip.callbacks.label = function (it) { return " Total profit: " + money(it.parsed.y); };
+  charts.profit = new Chart(el, {
+    type: "line",
+    data: {
+      labels: keys.map(function (k) { return (mode === "week" ? "Wk " : "") + bucketLabel(k, mode); }),
+      datasets: [{
+        label: "Profit", data: vals, borderColor: brand, backgroundColor: grad, fill: true, borderWidth: 2.5,
+        pointRadius: keys.length > 40 ? 0 : 3, pointHoverRadius: 5, tension: 0.3,
+        segment: { borderColor: function (s) { return s.p1.parsed.y < s.p0.parsed.y ? cssVar("--bad", "#d64545") : brand; } }
+      }]
+    },
+    options: opts
+  });
+}
+
+// ================= Export =================
+function downloadCSV(name, header, rows) {
+  var csv = [header].concat(rows).map(function (r) {
+    return r.map(function (v) { return '"' + String(v === null || v === undefined ? "" : v).replace(/"/g, '""') + '"'; }).join(",");
+  }).join("\n");
+  var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url; a.download = name; a.click();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+function exportClientsCSV() {
+  downloadCSV("growmypin_clients_" + todayKey() + ".csv",
+    ["Name", "Contact", "Status", "Health", "Plan", "Billing month", "Days left", "Days over", "To collect now", "Next charge", "Next due date", "Total paid", "Payments", "Last payment date", "Churn reason", "Added on"],
+    clients.map(function (c) {
+      var i = info(c), b = i.bill && i.bill.anchor ? i.bill : null;
+      return [c.name, c.email || "", c.status, i.health.label, b ? b.planLabel : "", b ? b.month : "", b && b.state !== "over" ? b.daysLeft : "", b ? b.daysOver : "", b ? b.outstanding : "", b ? b.nextAmount : "", b ? b.nextDate : "", i.revenue, i.paidCount, i.last ? i.last.date : "", c.churnReason || "", c.createdAt];
+    }));
+}
+function exportMoneyCSV() {
+  var rows = incomeEntries().map(function (e) { return [e.date, e.amount < 0 ? "refund" : "income", e.source, e.amount, e.note]; })
+    .concat(expenses.map(function (e) { return [e.date, "expense", e.source, e.amount, e.note || ""]; }))
+    .sort(function (a, b) { return String(a[0]).localeCompare(String(b[0])); });
+  downloadCSV("growmypin_money_" + todayKey() + ".csv", ["Date", "Type", "Source", "Amount", "Note"], rows);
+}
+
+// ================= Toast =================
+var toastTimer = null;
+function toast(msg, isErr) {
+  var t = document.getElementById("toast");
+  t.innerHTML = (isErr ? '<span style="color:#ff8a8a;display:inline-flex">' + icon("alert") + '</span>' : icon("check")) + esc(msg);
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2400);
+}
+
+// ================= Keyboard =================
+document.addEventListener("keydown", function (e) {
+  if (e.key !== "Escape") return;
+  if (document.getElementById("modalWrap")) closeModal();
+  else if (ui.openClientId) closeClient();
+});
+
+// ================= Auth lock (Supabase Auth) =================
+var appStarted = false;
+document.getElementById("authLogo").innerHTML = LOGO_SVG_LIGHT;
+document.getElementById("headLogo").innerHTML = LOGO_SVG;
+document.getElementById("logoutBtn").innerHTML = icon("lock") + '<span class="hide-m">Lock</span>';
+
+function showAuth() {
+  document.getElementById("authLoading").classList.add("hidden");
+  document.getElementById("appRoot").classList.add("hidden");
+  document.getElementById("authScreen").classList.remove("hidden");
+  closeModal();
+  setTimeout(function () { document.getElementById("loginPassword").focus(); }, 50);
+}
+function showApp() {
+  document.getElementById("authLoading").classList.add("hidden");
+  document.getElementById("authScreen").classList.add("hidden");
+  document.getElementById("appRoot").classList.remove("hidden");
+}
+function startApp() {
+  if (appStarted) return;
+  appStarted = true;
+  renderNav();
+  document.getElementById("view-overview").innerHTML = '<div class="loading" style="min-height:50vh"><div><div class="spinner"></div>Loading your clients...</div></div>';
+  loadAll().then(function () {
+    setSync("saved");
+    go("overview");
+  }).catch(function (e) {
+    console.error(e);
+    setSync("error");
+    document.getElementById("view-overview").innerHTML = '<div class="card"><div class="empty-state"><div class="e-ic" style="background:var(--bad-soft);color:var(--bad)">' + icon("alert") + '</div><b>Could not load data</b>Check your internet and refresh the page.</div></div>';
+  });
+}
+
+document.getElementById("loginForm").addEventListener("submit", function (ev) {
+  ev.preventDefault();
+  var pw = document.getElementById("loginPassword").value;
+  var errEl = document.getElementById("loginErr");
+  var btn = document.getElementById("loginBtn");
+  errEl.textContent = "";
+  if (!pw) { errEl.textContent = "Enter your password."; return; }
+  btn.disabled = true;
+  btn.textContent = "Unlocking...";
+  sb.auth.signInWithPassword({ email: LOCK_EMAIL, password: pw }).then(function (res) {
+    btn.disabled = false;
+    btn.textContent = "Unlock";
+    if (res.error) {
+      errEl.textContent = "Wrong password. Try again.";
+      document.getElementById("loginPassword").value = "";
+      document.getElementById("loginPassword").focus();
+    }
+  }).catch(function (e) {
+    console.error(e);
+    btn.disabled = false;
+    btn.textContent = "Unlock";
+    errEl.textContent = "Connection problem. Check your internet.";
+  });
+});
+
+// Lock again if the app was in the background for too long
+var hiddenAt = 0;
+document.addEventListener("visibilitychange", function () {
+  if (document.visibilityState === "hidden") hiddenAt = Date.now();
+  else if (hiddenAt && appStarted && (Date.now() - hiddenAt) >= LOCK_AFTER_HIDDEN_MS) window.location.reload();
+});
+
+document.getElementById("logoutBtn").addEventListener("click", function () {
+  sb.auth.signOut().then(function () { window.location.reload(); });
+});
+
+sb.auth.onAuthStateChange(function (event, session) {
+  if (session) {
+    showApp();
+    setTimeout(startApp, 0);
+  } else if (event === "SIGNED_OUT" && appStarted) {
+    window.location.reload();
+  } else {
+    showAuth();
+  }
+});
+</script>
+</body>
+</html>
